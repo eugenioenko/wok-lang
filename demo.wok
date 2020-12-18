@@ -1,0 +1,5 @@
+func name() {
+    // comment
+    var a = 123;
+    var b = "abc";
+}
