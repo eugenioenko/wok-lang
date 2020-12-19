@@ -1,15 +1,17 @@
-package tokenizer
+package main
 
 import (
 	"io/ioutil"
 	"unicode"
 )
 
+// Token and TokenTypes
+
 type TokenType int
 
 const (
 	// parser tokens
-	TokenTypeEof TokenType = iota
+	TokenTypeEof = iota
 	// single character tokens
 	TokenTypeLeftBrace
 	TokenTypeLeftBracket
@@ -52,10 +54,6 @@ const (
 	TokenTypeNumber
 )
 
-var TokenTypeText = map[int]string{
-	1: "test",
-}
-
 type Token struct {
 	ttype   TokenType
 	literal string
@@ -65,6 +63,8 @@ func MakeToken(ttype TokenType, literal string) Token {
 	return Token{ttype, literal}
 }
 
+// Tokenizer
+// Converts a source file into an array of tokens
 type Tokenizer struct {
 	source  []byte
 	current int
@@ -76,7 +76,7 @@ func MakeTokenizer() Tokenizer {
 	return Tokenizer{}
 }
 
-func (tokenizer *Tokenizer) LoadFile(fileName string) {
+func (tokenizer *Tokenizer) LoadFromFile(fileName string) {
 	content, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		panic(err)
