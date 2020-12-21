@@ -5,8 +5,10 @@ import (
 )
 
 func main() {
-	tknzr := MakeTokenizer()
-	tknzr.LoadFromFile("demo.wok")
-	tknzr.Tokenize()
+	tokenizer := MakeTokenizer()
+	tokenizer.LoadFromFile("demo.wok")
+	tokenizer.Tokenize()
+	parser := MakeParser()
+	parser.Parse(tokenizer.tokens)
 	fmt.Println("Dones")
 }

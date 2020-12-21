@@ -9,10 +9,16 @@ type Parser struct {
 func (parser *Parser) Parse(tokens []Token) []*Expression {
 	parser.current = 0
 	parser.expressions = make([]*Expression, 0)
+	parser.tokens = tokens
 	for !parser.Eof() {
-		parser.expressions = append(parser.expressions, parser.DeclarationStatement())
+		expr := parser.DeclarationStatement()
+		parser.expressions = append(parser.expressions, &expr)
 	}
 	return parser.expressions
+}
+
+func MakeParser() Parser {
+	return Parser{}
 }
 
 func (parser *Parser) Match(tokenTypes ...TokenType) bool {
@@ -27,7 +33,8 @@ func (parser *Parser) Match(tokenTypes ...TokenType) bool {
 
 func (parser *Parser) Check(tokenTypes ...TokenType) bool {
 	for _, tokenType := range tokenTypes {
-		if parser.tokens[parser.current].ttype == tokenType {
+		currentType := parser.tokens[parser.current].ttype
+		if currentType == tokenType {
 			return true
 		}
 	}
@@ -65,6 +72,58 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 	panic(errorMessage)
 }
 
-func (parser *Parser) DeclarationStatement() *Expression {
-	return nil
+func (parser *Parser) DeclarationStatement() Expression {
+	return parser.ExpressionStatement()
+}
+
+func (parser *Parser) ExpressionStatement() Expression {
+	return parser.EqualityExpression()
+}
+
+func (parser *Parser) EqualityExpression() Expression {
+	expr := parser.ComparisonExpression()
+	for parser.Match(TokenTypeEqualEqual) {
+		oprtr := parser.Previous()
+		right := parser.ComparisonExpression()
+		expr = MakeExpressionBinary(expr, oprtr, right)
+
+	}
+	return expr
+}
+
+func (parser *Parser) ComparisonExpression() Expression {
+	expr := parser.AdditionExpression()
+	for parser.Match(
+		TokenTypeGreater, TokenTypeLess,
+		TokenTypeGreaterEqual, TokenTypeLessEqual) {
+		oprtr := parser.Previous()
+		right := parser.AdditionExpression()
+		expr = MakeExpressionBinary(expr, oprtr, right)
+	}
+	return expr
+}
+
+func (parser *Parser) AdditionExpression() Expression {
+	expr := parser.MultiplicationExpression()
+	for parser.Match(TokenTypePlus, TokenTypeMinus) {
+		oprtr := parser.Previous()
+		right := parser.MultiplicationExpression()
+		expr = MakeExpressionBinary(expr, oprtr, right)
+	}
+	return expr
+}
+
+func (parser *Parser) MultiplicationExpression() Expression {
+	expr := parser.PrimaryExpression()
+	for parser.Match(TokenTypeSlash, TokenTypeStar) {
+		oprtr := parser.Previous()
+		right := parser.PrimaryExpression()
+		expr = MakeExpressionBinary(expr, oprtr, right)
+	}
+	return expr
+}
+
+func (parser *Parser) PrimaryExpression() Expression {
+	token := parser.Consume("Identifier or value expected", TokenTypeNumber)
+	return MakeExpressionValue(token)
 }

@@ -1,5 +1,1 @@
-func name() {
-    // comment
-    var a = 123;
-    var b = "abc";
-}
+32 + 22 - 10

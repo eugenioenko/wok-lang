@@ -11,47 +11,47 @@ type TokenType int
 
 const (
 	// parser tokens
-	TokenTypeEof = iota
+	TokenTypeEof = 0
 	// single character tokens
-	TokenTypeLeftBrace
-	TokenTypeLeftBracket
-	TokenTypeLeftParen
-	TokenTypePercent
-	TokenTypeRightBrace
-	TokenTypeRightBracket
-	TokenTypeRightParen
-	TokenTypeSlash
-	TokenTypeStar
-	TokenTypeComma
-	TokenTypeDot
-	TokenTypeSemicolon
+	TokenTypeLeftBrace    = 1
+	TokenTypeLeftBracket  = 2
+	TokenTypeLeftParen    = 3
+	TokenTypePercent      = 4
+	TokenTypeRightBrace   = 5
+	TokenTypeRightBracket = 6
+	TokenTypeRightParen   = 7
+	TokenTypeSlash        = 8
+	TokenTypeStar         = 9
+	TokenTypeComma        = 10
+	TokenTypeDot          = 11
+	TokenTypeSemicolon    = 12
 
 	// one or two character tokens
-	TokenTypeArrow
-	TokenTypeBang
-	TokenTypeBangEqual
-	TokenTypeColon
-	TokenTypeEqual
-	TokenTypeEqualEqual
-	TokenTypeGreater
-	TokenTypeGreaterEqual
-	TokenTypeLess
-	TokenTypeLessEqual
-	TokenTypeMinus
-	TokenTypeMinusEqual
-	TokenTypePercentEqual
-	TokenTypePlus
-	TokenTypePlusEqual
-	TokenTypeSlashEqual
-	TokenTypeStarEqual
+	TokenTypeArrow        = 13
+	TokenTypeBang         = 14
+	TokenTypeBangEqual    = 15
+	TokenTypeColon        = 16
+	TokenTypeEqual        = 17
+	TokenTypeEqualEqual   = 18
+	TokenTypeGreater      = 19
+	TokenTypeGreaterEqual = 20
+	TokenTypeLess         = 21
+	TokenTypeLessEqual    = 22
+	TokenTypeMinus        = 23
+	TokenTypeMinusEqual   = 24
+	TokenTypePercentEqual = 25
+	TokenTypePlus         = 26
+	TokenTypePlusEqual    = 27
+	TokenTypeSlashEqual   = 28
+	TokenTypeStarEqual    = 29
 
 	// literals
-	TokenTypeIdentifier
-	TokenTypeString
-	TokenTypeNull
-	TokenTypeTrue
-	TokenTypeFalse
-	TokenTypeNumber
+	TokenTypeIdentifier = 30
+	TokenTypeString     = 31
+	TokenTypeNull       = 32
+	TokenTypeTrue       = 33
+	TokenTypeFalse      = 34
+	TokenTypeNumber     = 35
 )
 
 type Token struct {
@@ -197,6 +197,14 @@ func (tokenizer *Tokenizer) ScanToken() {
 		tokenizer.AddToken(TokenTypeStarEqual, "*=")
 	case char == '*':
 		tokenizer.AddToken(TokenTypeStar, "*")
+	case char == '+' && tokenizer.Match('='):
+		tokenizer.AddToken(TokenTypePlusEqual, "+=")
+	case char == '+':
+		tokenizer.AddToken(TokenTypePlus, "+")
+	case char == '-' && tokenizer.Match('='):
+		tokenizer.AddToken(TokenTypeMinusEqual, "-=")
+	case char == '-':
+		tokenizer.AddToken(TokenTypeMinus, "-")
 	case char == '<' && tokenizer.Match('='):
 		tokenizer.AddToken(TokenTypeLessEqual, "<=")
 	case char == '<':
@@ -228,7 +236,7 @@ func (tokenizer *Tokenizer) ScanToken() {
 	case char == '\n':
 	case char == '\r':
 	default:
-		panic("Unexpected character: " + string(char))
+		panic("[Tokenizer] Unexpected character: " + string(char))
 
 	}
 
