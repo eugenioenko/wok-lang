@@ -1,21 +1,22 @@
 package main
 
 type WokData interface {
-	ToString() string
-	ToBoolean() bool
-	ToNumber() int
-	ToFloat() float64
+	ToString() (string, bool)
+	ToBoolean() (bool, bool)
+	ToNumber() (int, bool)
+	ToFloat() (float64, bool)
+	Equals(other WokData) bool
 	GetType() int
-	GetValue()
+	GetValue() interface{}
 }
 
 const (
 	// parser tokensA
-	WokDataNull = iota
-	WokDataBool
-	WokDataNumber
-	WokDataFloat
-	WokDataString
+	WokDataNull   = 0
+	WokDataBool   = 1
+	WokDataNumber = 2
+	WokDataFloat  = 3
+	WokDataString = 4
 )
 
 type DataString struct {

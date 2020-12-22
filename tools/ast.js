@@ -5,7 +5,7 @@ const ExpressionAST = {
     Binary: ['left Expression', 'operator Token', 'right Expression'],
     Call: ['callee Expression', 'paren Token', 'args []Expression'],
     Grouping: ['expression Expression'],
-    Literal: ['value *WokData'],
+    Literal: ['value WokData'],
     Unary: ['operator Token', 'right Expression'],
     Value: ['value Token'],
     Variable: ['value Token']
@@ -26,12 +26,12 @@ function generateAST(base, arg, AST, filename) {
 `package main
 
 type ${base} interface {
-    Accept(visitor Visitor${base}) *WokData
+    Accept(visitor Visitor${base}) WokData
 }\n\n`;
 
     file += `type Visitor${base} interface {\n`;
     Object.keys(AST).forEach(name => {
-        file += `\tVisit${base}${name}(${arg} *${base}${name}) *WokData\n`;
+        file += `\tVisit${base}${name}(${arg} *${base}${name}) WokData\n`;
     });
     file += '}\n\n';
 
@@ -46,7 +46,7 @@ type ${base} interface {
         file += `\treturn &${base}${name}{`
         file += syntax.map(member => member.split(' ')[0]).join(', ')
         file += '}\n}\n'
-        file += `\nfunc (${arg} *${base}${name}) Accept (visitor Visitor${base}) *WokData {\n`
+        file += `\nfunc (${arg} *${base}${name}) Accept (visitor Visitor${base}) WokData {\n`
         file += `\treturn visitor.Visit${base}${name}(${arg})\n}\n\n`
     });
 

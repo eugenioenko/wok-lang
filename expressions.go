@@ -1,18 +1,18 @@
 package main
 
 type Expression interface {
-    Accept(visitor VisitorExpression) *WokData
+    Accept(visitor VisitorExpression) WokData
 }
 
 type VisitorExpression interface {
-	VisitExpressionAssign(expr *ExpressionAssign) *WokData
-	VisitExpressionBinary(expr *ExpressionBinary) *WokData
-	VisitExpressionCall(expr *ExpressionCall) *WokData
-	VisitExpressionGrouping(expr *ExpressionGrouping) *WokData
-	VisitExpressionLiteral(expr *ExpressionLiteral) *WokData
-	VisitExpressionUnary(expr *ExpressionUnary) *WokData
-	VisitExpressionValue(expr *ExpressionValue) *WokData
-	VisitExpressionVariable(expr *ExpressionVariable) *WokData
+	VisitExpressionAssign(expr *ExpressionAssign) WokData
+	VisitExpressionBinary(expr *ExpressionBinary) WokData
+	VisitExpressionCall(expr *ExpressionCall) WokData
+	VisitExpressionGrouping(expr *ExpressionGrouping) WokData
+	VisitExpressionLiteral(expr *ExpressionLiteral) WokData
+	VisitExpressionUnary(expr *ExpressionUnary) WokData
+	VisitExpressionValue(expr *ExpressionValue) WokData
+	VisitExpressionVariable(expr *ExpressionVariable) WokData
 }
 
 type ExpressionAssign struct {
@@ -24,7 +24,7 @@ func NewExpressionAssign(name Token, value Expression) *ExpressionAssign {
 	return &ExpressionAssign{name, value}
 }
 
-func (expr *ExpressionAssign) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionAssign) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionAssign(expr)
 }
 
@@ -38,7 +38,7 @@ func NewExpressionBinary(left Expression, operator Token, right Expression) *Exp
 	return &ExpressionBinary{left, operator, right}
 }
 
-func (expr *ExpressionBinary) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionBinary) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionBinary(expr)
 }
 
@@ -52,7 +52,7 @@ func NewExpressionCall(callee Expression, paren Token, args []Expression) *Expre
 	return &ExpressionCall{callee, paren, args}
 }
 
-func (expr *ExpressionCall) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionCall) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionCall(expr)
 }
 
@@ -64,19 +64,19 @@ func NewExpressionGrouping(expression Expression) *ExpressionGrouping {
 	return &ExpressionGrouping{expression}
 }
 
-func (expr *ExpressionGrouping) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionGrouping) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionGrouping(expr)
 }
 
 type ExpressionLiteral struct {
-    value *WokData
+    value WokData
 }
 
-func NewExpressionLiteral(value *WokData) *ExpressionLiteral {
+func NewExpressionLiteral(value WokData) *ExpressionLiteral {
 	return &ExpressionLiteral{value}
 }
 
-func (expr *ExpressionLiteral) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionLiteral) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionLiteral(expr)
 }
 
@@ -89,7 +89,7 @@ func NewExpressionUnary(operator Token, right Expression) *ExpressionUnary {
 	return &ExpressionUnary{operator, right}
 }
 
-func (expr *ExpressionUnary) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionUnary) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionUnary(expr)
 }
 
@@ -101,7 +101,7 @@ func NewExpressionValue(value Token) *ExpressionValue {
 	return &ExpressionValue{value}
 }
 
-func (expr *ExpressionValue) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionValue) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionValue(expr)
 }
 
@@ -113,7 +113,7 @@ func NewExpressionVariable(value Token) *ExpressionVariable {
 	return &ExpressionVariable{value}
 }
 
-func (expr *ExpressionVariable) Accept (visitor VisitorExpression) *WokData {
+func (expr *ExpressionVariable) Accept (visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionVariable(expr)
 }
 

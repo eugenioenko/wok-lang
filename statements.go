@@ -1,16 +1,16 @@
 package main
 
 type Statement interface {
-    Accept(visitor VisitorStatement) *WokData
+    Accept(visitor VisitorStatement) WokData
 }
 
 type VisitorStatement interface {
-	VisitStatementExpression(stmt *StatementExpression) *WokData
-	VisitStatementFunc(stmt *StatementFunc) *WokData
-	VisitStatementIf(stmt *StatementIf) *WokData
-	VisitStatementReturn(stmt *StatementReturn) *WokData
-	VisitStatementVar(stmt *StatementVar) *WokData
-	VisitStatementWhile(stmt *StatementWhile) *WokData
+	VisitStatementExpression(stmt *StatementExpression) WokData
+	VisitStatementFunc(stmt *StatementFunc) WokData
+	VisitStatementIf(stmt *StatementIf) WokData
+	VisitStatementReturn(stmt *StatementReturn) WokData
+	VisitStatementVar(stmt *StatementVar) WokData
+	VisitStatementWhile(stmt *StatementWhile) WokData
 }
 
 type StatementExpression struct {
@@ -21,7 +21,7 @@ func NewStatementExpression(expr Expression) *StatementExpression {
 	return &StatementExpression{expr}
 }
 
-func (stmt *StatementExpression) Accept (visitor VisitorStatement) *WokData {
+func (stmt *StatementExpression) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementExpression(stmt)
 }
 
@@ -35,7 +35,7 @@ func NewStatementFunc(name Token, params []Token, body []Statement) *StatementFu
 	return &StatementFunc{name, params, body}
 }
 
-func (stmt *StatementFunc) Accept (visitor VisitorStatement) *WokData {
+func (stmt *StatementFunc) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementFunc(stmt)
 }
 
@@ -49,7 +49,7 @@ func NewStatementIf(condition Expression, thenStmt Statement, elseStmt Statement
 	return &StatementIf{condition, thenStmt, elseStmt}
 }
 
-func (stmt *StatementIf) Accept (visitor VisitorStatement) *WokData {
+func (stmt *StatementIf) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementIf(stmt)
 }
 
@@ -62,7 +62,7 @@ func NewStatementReturn(keyword Token, value Expression) *StatementReturn {
 	return &StatementReturn{keyword, value}
 }
 
-func (stmt *StatementReturn) Accept (visitor VisitorStatement) *WokData {
+func (stmt *StatementReturn) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementReturn(stmt)
 }
 
@@ -77,7 +77,7 @@ func NewStatementVar(name Token, dtype Token, initial Expression, writable bool)
 	return &StatementVar{name, dtype, initial, writable}
 }
 
-func (stmt *StatementVar) Accept (visitor VisitorStatement) *WokData {
+func (stmt *StatementVar) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementVar(stmt)
 }
 
@@ -90,7 +90,7 @@ func NewStatementWhile(condition Expression, loop Statement) *StatementWhile {
 	return &StatementWhile{condition, loop}
 }
 
-func (stmt *StatementWhile) Accept (visitor VisitorStatement) *WokData {
+func (stmt *StatementWhile) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementWhile(stmt)
 }
 
