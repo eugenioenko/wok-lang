@@ -3,16 +3,16 @@ package main
 type Parser struct {
 	current     int
 	tokens      []Token
-	expressions []*Expression
+	expressions []Expression
 }
 
-func (parser *Parser) Parse(tokens []Token) []*Expression {
+func (parser *Parser) Parse(tokens []Token) []Expression {
 	parser.current = 0
-	parser.expressions = make([]*Expression, 0)
+	parser.expressions = make([]Expression, 0)
 	parser.tokens = tokens
 	for !parser.Eof() {
 		expr := parser.DeclarationStatement()
-		parser.expressions = append(parser.expressions, &expr)
+		parser.expressions = append(parser.expressions, expr)
 	}
 	return parser.expressions
 }
@@ -85,7 +85,7 @@ func (parser *Parser) EqualityExpression() Expression {
 	for parser.Match(TokenTypeEqualEqual) {
 		oprtr := parser.Previous()
 		right := parser.ComparisonExpression()
-		expr = MakeExpressionBinary(expr, oprtr, right)
+		expr = NewExpressionBinary(expr, oprtr, right)
 
 	}
 	return expr
@@ -98,7 +98,7 @@ func (parser *Parser) ComparisonExpression() Expression {
 		TokenTypeGreaterEqual, TokenTypeLessEqual) {
 		oprtr := parser.Previous()
 		right := parser.AdditionExpression()
-		expr = MakeExpressionBinary(expr, oprtr, right)
+		expr = NewExpressionBinary(expr, oprtr, right)
 	}
 	return expr
 }
@@ -108,7 +108,7 @@ func (parser *Parser) AdditionExpression() Expression {
 	for parser.Match(TokenTypePlus, TokenTypeMinus) {
 		oprtr := parser.Previous()
 		right := parser.MultiplicationExpression()
-		expr = MakeExpressionBinary(expr, oprtr, right)
+		expr = NewExpressionBinary(expr, oprtr, right)
 	}
 	return expr
 }
@@ -118,12 +118,13 @@ func (parser *Parser) MultiplicationExpression() Expression {
 	for parser.Match(TokenTypeSlash, TokenTypeStar) {
 		oprtr := parser.Previous()
 		right := parser.PrimaryExpression()
-		expr = MakeExpressionBinary(expr, oprtr, right)
+		expr = NewExpressionBinary(expr, oprtr, right)
 	}
 	return expr
 }
 
 func (parser *Parser) PrimaryExpression() Expression {
 	token := parser.Consume("Identifier or value expected", TokenTypeNumber)
-	return MakeExpressionValue(token)
+	expr := NewExpressionValue(token)
+	return expr
 }

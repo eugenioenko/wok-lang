@@ -1,12 +1,12 @@
 let fs = require('fs');
 
 const ExpressionAST = {
-    Assign: ['name Token', 'value *Expression'],
-    Binary: ['left *Expression', 'operator Token', 'right *Expression'],
-    Call: ['callee *Expression', 'paren Token', 'args []*Expression'],
-    Grouping: ['expression *Expression'],
+    Assign: ['name Token', 'value Expression'],
+    Binary: ['left Expression', 'operator Token', 'right Expression'],
+    Call: ['callee Expression', 'paren Token', 'args []*Expression'],
+    Grouping: ['expression Expression'],
     Literal: ['value *WokData'],
-    Unary: ['operator Token', 'right *Expression'],
+    Unary: ['operator Token', 'right Expression'],
     Value: ['value Token'],
     Variable: ['value Token']
 };
@@ -20,7 +20,7 @@ function generateAST(base, arg, AST, filename) {
 `package main
 
 type Expression interface {
-    Accept(visitor *VisitorExpression) *WokData
+    Accept(visitor VisitorExpression) *WokData
 }
 \n`;
 
@@ -41,7 +41,7 @@ type Expression interface {
         file += `\treturn &${base}${name}{`
         file += syntax.map(member => member.split(' ')[0]).join(', ')
         file += '}\n}\n'
-        file += `\nfunc (${arg} *${base}${name}) Accept (visitor *Visitor${base}) *WokData {\n`
+        file += `\nfunc (${arg} *${base}${name}) Accept (visitor Visitor${base}) *WokData {\n`
         file += `\treturn visitor.Visit${base}${name}(${arg})\n}\n\n`
     });
 
