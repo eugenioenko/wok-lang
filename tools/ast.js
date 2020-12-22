@@ -3,7 +3,7 @@ let fs = require('fs');
 const ExpressionAST = {
     Assign: ['name Token', 'value Expression'],
     Binary: ['left Expression', 'operator Token', 'right Expression'],
-    Call: ['callee Expression', 'paren Token', 'args []*Expression'],
+    Call: ['callee Expression', 'paren Token', 'args []Expression'],
     Grouping: ['expression Expression'],
     Literal: ['value *WokData'],
     Unary: ['operator Token', 'right Expression'],
@@ -12,17 +12,22 @@ const ExpressionAST = {
 };
 
 const StatementAST = {
-
+    Expression : ['expression Expression'],
+    Func: ['name Token', 'params []Token', 'body []Statement'],
+    If: ['condition Expression', 'thenStmt Statement', 'elseStmt Statement'],
+    Return: ['keyword Token', 'value Expression'],
+    Var: ['name Token', 'dtype Token', 'initial Expression', 'writable bool'],
+    While: ['condition Expression', 'loop Statement']
 };
+
 
 function generateAST(base, arg, AST, filename) {
     let file =
 `package main
 
-type Expression interface {
-    Accept(visitor VisitorExpression) *WokData
-}
-\n`;
+type ${base} interface {
+    Accept(visitor Visitor${base}) *WokData
+}\n\n`;
 
     file += `type Visitor${base} interface {\n`;
     Object.keys(AST).forEach(name => {
@@ -52,3 +57,4 @@ type Expression interface {
 }
 
 generateAST('Expression', 'expr', ExpressionAST, 'expressions');
+generateAST('Statement', 'stmt', StatementAST, 'statements');

@@ -86,7 +86,6 @@ func (parser *Parser) EqualityExpression() Expression {
 		oprtr := parser.Previous()
 		right := parser.ComparisonExpression()
 		expr = NewExpressionBinary(expr, oprtr, right)
-
 	}
 	return expr
 }
