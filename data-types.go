@@ -1,6 +1,6 @@
 package main
 
-type DataType interface {
+type WokData interface {
 	ToString() string
 	ToBoolean() bool
 	ToNumber() int
@@ -11,11 +11,11 @@ type DataType interface {
 
 const (
 	// parser tokensA
-	DataTypeNull = iota
-	DataTypeBool
-	DataTypeNumber
-	DataTypeFloat
-	DataTypeString
+	WokDataNull = iota
+	WokDataBool
+	WokDataNumber
+	WokDataFloat
+	WokDataString
 )
 
 type DataString struct {
