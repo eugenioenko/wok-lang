@@ -5,20 +5,20 @@ type Statement interface {
 }
 
 type VisitorStatement interface {
-	VisitStatementExpression(stmt *ExpressionExpression) *WokData
-	VisitStatementFunc(stmt *ExpressionFunc) *WokData
-	VisitStatementIf(stmt *ExpressionIf) *WokData
-	VisitStatementReturn(stmt *ExpressionReturn) *WokData
-	VisitStatementVar(stmt *ExpressionVar) *WokData
-	VisitStatementWhile(stmt *ExpressionWhile) *WokData
+	VisitStatementExpression(stmt *StatementExpression) *WokData
+	VisitStatementFunc(stmt *StatementFunc) *WokData
+	VisitStatementIf(stmt *StatementIf) *WokData
+	VisitStatementReturn(stmt *StatementReturn) *WokData
+	VisitStatementVar(stmt *StatementVar) *WokData
+	VisitStatementWhile(stmt *StatementWhile) *WokData
 }
 
 type StatementExpression struct {
-    expression Expression
+    expr Expression
 }
 
-func NewStatementExpression(expression Expression) *StatementExpression {
-	return &StatementExpression{expression}
+func NewStatementExpression(expr Expression) *StatementExpression {
+	return &StatementExpression{expr}
 }
 
 func (stmt *StatementExpression) Accept (visitor VisitorStatement) *WokData {

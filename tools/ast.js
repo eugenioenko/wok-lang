@@ -12,7 +12,7 @@ const ExpressionAST = {
 };
 
 const StatementAST = {
-    Expression : ['expression Expression'],
+    Expression : ['expr Expression'],
     Func: ['name Token', 'params []Token', 'body []Statement'],
     If: ['condition Expression', 'thenStmt Statement', 'elseStmt Statement'],
     Return: ['keyword Token', 'value Expression'],
@@ -31,7 +31,7 @@ type ${base} interface {
 
     file += `type Visitor${base} interface {\n`;
     Object.keys(AST).forEach(name => {
-        file += `\tVisit${base}${name}(${arg} *Expression${name}) *WokData\n`;
+        file += `\tVisit${base}${name}(${arg} *${base}${name}) *WokData\n`;
     });
     file += '}\n\n';
 

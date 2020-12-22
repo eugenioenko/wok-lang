@@ -1,20 +1,20 @@
 package main
 
 type Parser struct {
-	current     int
-	tokens      []Token
-	expressions []Expression
+	current    int
+	tokens     []Token
+	statements []Statement
 }
 
-func (parser *Parser) Parse(tokens []Token) []Expression {
+func (parser *Parser) Parse(tokens []Token) []Statement {
 	parser.current = 0
-	parser.expressions = make([]Expression, 0)
+	parser.statements = make([]Statement, 0)
 	parser.tokens = tokens
 	for !parser.Eof() {
-		expr := parser.DeclarationStatement()
-		parser.expressions = append(parser.expressions, expr)
+		stmt := parser.DeclarationStatement()
+		parser.statements = append(parser.statements, stmt)
 	}
-	return parser.expressions
+	return parser.statements
 }
 
 func MakeParser() Parser {
@@ -72,12 +72,13 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 	panic(errorMessage)
 }
 
-func (parser *Parser) DeclarationStatement() Expression {
+func (parser *Parser) DeclarationStatement() Statement {
 	return parser.ExpressionStatement()
 }
 
-func (parser *Parser) ExpressionStatement() Expression {
-	return parser.EqualityExpression()
+func (parser *Parser) ExpressionStatement() Statement {
+	expr := parser.EqualityExpression()
+	return NewStatementExpression(expr)
 }
 
 func (parser *Parser) EqualityExpression() Expression {
