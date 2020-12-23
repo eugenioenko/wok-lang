@@ -5,8 +5,8 @@ import (
 )
 
 type WokData interface {
-	ToString() (string, error)
-	ToBoolean() (bool, error)
+	ToString() string
+	ToBoolean() bool
 	ToInteger() (int64, error)
 	ToFloat() (float64, error)
 	Equals(other WokData) bool
@@ -15,11 +15,11 @@ type WokData interface {
 }
 
 const (
-	WokDataNull    = 0
-	WokDataBool    = 1
-	WokDataInteger = 2
-	WokDataFloat   = 3
-	WokDataString  = 4
+	WokTypeNull    = 0
+	WokTypeBool    = 1
+	WokTypeInteger = 2
+	WokTypeFloat   = 3
+	WokTypeString  = 4
 )
 
 type WokString struct {
@@ -27,12 +27,15 @@ type WokString struct {
 	dtype int
 }
 
-func (data *WokString) ToString() (string, error) {
+func NewWokString(value string) *WokString {
+	return &WokString{value: value, dtype: WokTypeString}
+}
+func (data *WokString) ToString() string {
 	return data.value, nil
 }
 
-func (data *WokString) ToBoolean() (bool, error) {
-	return len(data.value) > 0, nil
+func (data *WokString) ToBoolean() bool {
+	return len(data.value) > 0
 }
 
 func (data *WokString) ToInteger() (int64, error) {
@@ -52,5 +55,42 @@ func (data *WokString) GetValue() string {
 }
 
 func (data *WokString) Equals(other WokData) bool {
+	return other.GetType() == data.dtype && other.GetValue() == data.value
+}
+
+type WokInteger struct {
+	value int64
+	dtype int
+}
+
+func NewWokInteger(value int64) *WokInteger {
+	return &WokInteger{value: value, dtype: WokTypeInteger}
+}
+
+func (data *WokInteger) ToString() string {
+	return strconv.FormatInt(data.value, 10)
+}
+
+func (data *WokInteger) ToBoolean() bool {
+	return data.value != 0
+}
+
+func (data *WokInteger) ToInteger() (int64, error) {
+	return data.value, nil
+}
+
+func (data *WokInteger) ToFloat() (float64, error) {
+	return float64(data.value), nil
+}
+
+func (data *WokInteger) GetType() int {
+	return data.dtype
+}
+
+func (data *WokInteger) GetValue() int64 {
+	return data.value
+}
+
+func (data *WokInteger) Equals(other WokData) bool {
 	return other.GetType() == data.dtype && other.GetValue() == data.value
 }
