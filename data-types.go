@@ -190,3 +190,39 @@ func (data *WokFloat) Equals(other WokData) bool {
 	// https://golang.org/ref/spec#Comparison_operators
 	return data.GetType() == other.GetType() && data.value == other.GetValue()
 }
+
+type WokNull struct {
+	dtype int
+}
+
+func NewWokNull() *WokNull {
+	return &WokNull{dtype: WokTypeString}
+}
+
+func (data *WokNull) ToString() string {
+	return "null"
+}
+
+func (data *WokNull) ToBoolean() bool {
+	return false
+}
+
+func (data *WokNull) ToInteger() int64 {
+	return 0
+}
+
+func (data *WokNull) ToFloat() float64 {
+	return 0
+}
+
+func (data *WokNull) GetType() int {
+	return data.dtype
+}
+
+func (data *WokNull) GetValue() interface{} {
+	panic("Cant GetValue of Null")
+}
+
+func (data *WokNull) Equals(other WokData) bool {
+	return data.GetType() == other.GetType() && data.dtype == WokTypeNull
+}
