@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 	/*
 		tokenizer := MakeTokenizer()
@@ -9,6 +11,11 @@ func main() {
 		parser.Parse(tokenizer.tokens)
 		fmt.Println("Dones")
 	*/
-	scope := NewScope(nil)
 
+	num := NewWokInteger(22)
+	num1 := NewWokInteger(22)
+	same := num1.Equals(num)
+	fmt.Println(same)
+
+	fmt.Println("Dones")
 }
