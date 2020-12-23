@@ -114,17 +114,32 @@ func (parser *Parser) AdditionExpression() Expression {
 }
 
 func (parser *Parser) MultiplicationExpression() Expression {
-	expr := parser.PrimaryExpression()
+	expr := parser.UnaryExpression()
 	for parser.Match(TokenTypeSlash, TokenTypeStar) {
 		oprtr := parser.Previous()
-		right := parser.PrimaryExpression()
+		right := parser.UnaryExpression()
 		expr = NewExpressionBinary(expr, oprtr, right)
 	}
 	return expr
 }
 
+func (parser *Parser) UnaryExpression() Expression {
+	if parser.Match(TokenTypeBang, TokenTypeMinus, TokenTypePlus) {
+		oprtr := parser.Previous()
+		right := parser.PrimaryExpression()
+		return NewExpressionUnary(oprtr, right)
+	}
+	return parser.PrimaryExpression()
+}
+
 func (parser *Parser) PrimaryExpression() Expression {
-	token := parser.Consume("Identifier or value expected", TokenTypeNumber)
-	expr := NewExpressionValue(token)
-	return expr
+	switch {
+	case parser.Match(TokenTypeNumber, TokenTypeString):
+		return NewExpressionValue(parser.Previous())
+	case parser.Match(TokenTypeIdentifier):
+		return NewExpressionVariable(parser.Previous())
+	default:
+		parser.Error(parser.Peek(), "Unexpected token")
+	}
+	return nil
 }
