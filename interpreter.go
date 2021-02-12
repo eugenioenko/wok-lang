@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 type Interpreter struct {
 	current    int
@@ -13,9 +16,11 @@ func MakeInterpreter() Interpreter {
 }
 
 func (interpreter *Interpreter) Interpret(statements []Statement) {
-	for _, statement := range interpreter.statements {
+	for i, statement := range statements {
 		result := interpreter.Execute(statement)
-		fmt.Println(result.GetValue())
+		fmt.Print(i)
+		fmt.Print(" - ")
+		fmt.Println(result.ToString())
 	}
 }
 
@@ -27,12 +32,19 @@ func (interpreter *Interpreter) Evaluate(expr Expression) WokData {
 	return expr.Accept(interpreter)
 }
 
+func (interpreter *Interpreter) Error(errorMessage string) {
+	panic(errorMessage)
+}
+
 func (interpreter *Interpreter) VisitExpressionAssign(expr *ExpressionAssign) WokData {
 	return NewWokNull()
 }
 
 func (interpreter *Interpreter) VisitExpressionBinary(expr *ExpressionBinary) WokData {
-	return NewWokNull()
+	left := interpreter.Evaluate(expr.left)
+	right := interpreter.Evaluate(expr.right)
+
+	return NewWokInteger(left.ToInteger() + right.ToInteger())
 }
 
 func (interpreter *Interpreter) VisitExpressionCall(expr *ExpressionCall) WokData {
@@ -52,7 +64,11 @@ func (interpreter *Interpreter) VisitExpressionUnary(expr *ExpressionUnary) WokD
 }
 
 func (interpreter *Interpreter) VisitExpressionValue(expr *ExpressionValue) WokData {
-	return NewWokNull()
+	value, err := strconv.ParseInt(expr.value.literal, 10, 64)
+	if err != nil {
+		interpreter.Error("string to int failed")
+	}
+	return NewWokInteger(value)
 }
 
 func (interpreter *Interpreter) VisitExpressionVariable(expr *ExpressionVariable) WokData {
@@ -60,7 +76,7 @@ func (interpreter *Interpreter) VisitExpressionVariable(expr *ExpressionVariable
 }
 
 func (interpreter *Interpreter) VisitStatementExpression(stmt *StatementExpression) WokData {
-	return NewWokNull()
+	return interpreter.Evaluate(stmt.expr)
 }
 
 func (interpreter *Interpreter) VisitStatementFunc(stmt *StatementFunc) WokData {
