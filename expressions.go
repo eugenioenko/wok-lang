@@ -16,11 +16,11 @@ type VisitorExpression interface {
 }
 
 type ExpressionAssign struct {
-    name Token
+    name Expression
     value Expression
 }
 
-func NewExpressionAssign(name Token, value Expression) *ExpressionAssign {
+func NewExpressionAssign(name Expression, value Expression) *ExpressionAssign {
 	return &ExpressionAssign{name, value}
 }
 

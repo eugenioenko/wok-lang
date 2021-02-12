@@ -77,8 +77,17 @@ func (parser *Parser) DeclarationStatement() Statement {
 }
 
 func (parser *Parser) ExpressionStatement() Statement {
-	expr := parser.EqualityExpression()
+	expr := parser.AssignmentExpression()
 	return NewStatementExpression(expr)
+}
+
+func (parser *Parser) AssignmentExpression() Expression {
+	expr := parser.EqualityExpression()
+	if parser.Match(TokenTypeEqual) {
+		value := parser.AssignmentExpression()
+		expr = NewExpressionAssign(expr, value)
+	}
+	return expr
 }
 
 func (parser *Parser) EqualityExpression() Expression {
