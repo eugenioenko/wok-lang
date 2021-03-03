@@ -18,6 +18,7 @@ func MakeInterpreter() Interpreter {
 func (interpreter *Interpreter) Interpret(statements []Statement) {
 	for i, statement := range statements {
 		result := interpreter.Execute(statement)
+		fmt.Print(":")
 		fmt.Print(i)
 		fmt.Print(" - ")
 		fmt.Println(result.ToString())
@@ -43,8 +44,19 @@ func (interpreter *Interpreter) VisitExpressionAssign(expr *ExpressionAssign) Wo
 func (interpreter *Interpreter) VisitExpressionBinary(expr *ExpressionBinary) WokData {
 	left := interpreter.Evaluate(expr.left)
 	right := interpreter.Evaluate(expr.right)
-
-	return NewWokInteger(left.ToInteger() + right.ToInteger())
+	switch expr.operator.ttype {
+	case TokenTypePlus:
+		return NewWokInteger(left.ToInteger() + right.ToInteger())
+	case TokenTypeMinus:
+		return NewWokInteger(left.ToInteger() - right.ToInteger())
+	case TokenTypeStar:
+		return NewWokInteger(left.ToInteger() * right.ToInteger())
+	case TokenTypeSlash:
+		return NewWokInteger(left.ToInteger() / right.ToInteger())
+	default:
+		interpreter.Error("Unknown binary operator: " + expr.operator.literal)
+		return NewWokNull()
+	}
 }
 
 func (interpreter *Interpreter) VisitExpressionCall(expr *ExpressionCall) WokData {
@@ -97,4 +109,10 @@ func (interpreter *Interpreter) VisitStatementVar(stmt *StatementVar) WokData {
 
 func (interpreter *Interpreter) VisitStatementWhile(stmt *StatementWhile) WokData {
 	return NewWokNull()
+}
+
+func (interpreter *Interpreter) VisitStatementPrint(stmt *StatementPrint) WokData {
+	result := interpreter.Evaluate(stmt.value)
+	fmt.Println(result.ToString())
+	return result
 }

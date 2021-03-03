@@ -72,8 +72,17 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 	panic(errorMessage)
 }
 
+// AST
 func (parser *Parser) DeclarationStatement() Statement {
+	if parser.Match(TokenTypePrint) {
+		return parser.PrintStatement()
+	}
 	return parser.ExpressionStatement()
+}
+
+func (parser *Parser) PrintStatement() Statement {
+	expr := parser.AssignmentExpression()
+	return NewStatementPrint(expr)
 }
 
 func (parser *Parser) ExpressionStatement() Statement {

@@ -11,6 +11,7 @@ type VisitorStatement interface {
 	VisitStatementReturn(stmt *StatementReturn) WokData
 	VisitStatementVar(stmt *StatementVar) WokData
 	VisitStatementWhile(stmt *StatementWhile) WokData
+	VisitStatementPrint(stmt *StatementPrint) WokData
 }
 
 type StatementExpression struct {
@@ -92,5 +93,17 @@ func NewStatementWhile(condition Expression, loop Statement) *StatementWhile {
 
 func (stmt *StatementWhile) Accept (visitor VisitorStatement) WokData {
 	return visitor.VisitStatementWhile(stmt)
+}
+
+type StatementPrint struct {
+    value Expression
+}
+
+func NewStatementPrint(value Expression) *StatementPrint {
+	return &StatementPrint{value}
+}
+
+func (stmt *StatementPrint) Accept (visitor VisitorStatement) WokData {
+	return visitor.VisitStatementPrint(stmt)
 }
 

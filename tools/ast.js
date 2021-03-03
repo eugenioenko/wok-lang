@@ -17,7 +17,8 @@ const StatementAST = {
     If: ['condition Expression', 'thenStmt Statement', 'elseStmt Statement'],
     Return: ['keyword Token', 'value Expression'],
     Var: ['name Token', 'dtype Token', 'initial Expression', 'writable bool'],
-    While: ['condition Expression', 'loop Statement']
+    While: ['condition Expression', 'loop Statement'],
+    Print: ['value Expression']
 };
 
 

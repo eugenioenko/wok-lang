@@ -52,7 +52,14 @@ const (
 	TokenTypeTrue       = 33
 	TokenTypeFalse      = 34
 	TokenTypeNumber     = 35
+	TokenTypePrint      = 36
+	TokenTypeVar        = 37
 )
+
+var ReservedTokens = map[string]int{
+	"print": TokenTypePrint,
+	"var":   TokenTypeVar,
+}
 
 type Token struct {
 	ttype   TokenType
@@ -160,7 +167,13 @@ func (tokenizer *Tokenizer) Identifier() {
 		tokenizer.Peek() == '_' {
 		tokenizer.Advance()
 	}
-	tokenizer.AddToken(TokenTypeIdentifier, string(tokenizer.source[tokenizer.start:tokenizer.current]))
+	token := string(tokenizer.source[tokenizer.start:tokenizer.current])
+	reserved, ok := ReservedTokens[token]
+	if ok {
+		tokenizer.AddToken(TokenType(reserved), token)
+	} else {
+		tokenizer.AddToken(TokenTypeIdentifier, token)
+	}
 }
 
 func (tokenizer *Tokenizer) Number() {
@@ -225,6 +238,8 @@ func (tokenizer *Tokenizer) ScanToken() {
 		tokenizer.Comment()
 	case char == '/' && tokenizer.Match('='):
 		tokenizer.AddToken(TokenTypeSlashEqual, "/=")
+	case char == '/':
+		tokenizer.AddToken(TokenTypeSlash, "/")
 	case char == '"':
 		tokenizer.String()
 	case unicode.IsDigit(char):
