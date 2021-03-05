@@ -16,12 +16,8 @@ func MakeInterpreter() Interpreter {
 }
 
 func (interpreter *Interpreter) Interpret(statements []Statement) {
-	for i, statement := range statements {
-		result := interpreter.Execute(statement)
-		fmt.Print(":")
-		fmt.Print(i)
-		fmt.Print(" - ")
-		fmt.Println(result.ToString())
+	for _, statement := range statements {
+		interpreter.Execute(statement)
 	}
 }
 

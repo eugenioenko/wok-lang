@@ -13,5 +13,5 @@ func main() {
 	interpreter := MakeInterpreter()
 	interpreter.Interpret(parser.statements)
 
-	fmt.Println("Dones")
+	fmt.Println("end")
 }
