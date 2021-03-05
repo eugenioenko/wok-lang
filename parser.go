@@ -72,7 +72,9 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 	panic(errorMessage)
 }
 
-// AST
+//------------------------------------------------------------------------------
+// AST STARTS HERE
+//------------------------------------------------------------------------------
 func (parser *Parser) DeclarationStatement() Statement {
 	if parser.Match(TokenTypePrint) {
 		return parser.PrintStatement()
@@ -152,12 +154,13 @@ func (parser *Parser) UnaryExpression() Expression {
 
 func (parser *Parser) PrimaryExpression() Expression {
 	switch {
-	case parser.Match(TokenTypeNumber, TokenTypeString):
+	case parser.Match(TokenTypeInteger),
+		parser.Match(TokenTypeFloat),
+		parser.Match(TokenTypeString):
 		return NewExpressionValue(parser.Previous())
 	case parser.Match(TokenTypeIdentifier):
 		return NewExpressionVariable(parser.Previous())
-	default:
-		parser.Error(parser.Peek(), "Unexpected token")
 	}
+	parser.Error(parser.Peek(), "Unexpected token")
 	return nil
 }

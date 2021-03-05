@@ -38,21 +38,52 @@ func (interpreter *Interpreter) VisitExpressionAssign(expr *ExpressionAssign) Wo
 }
 
 func (interpreter *Interpreter) VisitExpressionBinary(expr *ExpressionBinary) WokData {
+
 	left := interpreter.Evaluate(expr.left)
 	right := interpreter.Evaluate(expr.right)
-	switch expr.operator.ttype {
-	case TokenTypePlus:
-		return NewWokInteger(left.ToInteger() + right.ToInteger())
-	case TokenTypeMinus:
-		return NewWokInteger(left.ToInteger() - right.ToInteger())
-	case TokenTypeStar:
-		return NewWokInteger(left.ToInteger() * right.ToInteger())
-	case TokenTypeSlash:
-		return NewWokInteger(left.ToInteger() / right.ToInteger())
-	default:
-		interpreter.Error("Unknown binary operator: " + expr.operator.literal)
+
+	if left.GetType() != right.GetType() {
+		error := fmt.Sprintf("Invalid binary expression. No implicit casting allowed. %s %s %s", left.GetTypeName(), expr.operator.literal, right.GetTypeName())
+		interpreter.Error(error)
 		return NewWokNull()
 	}
+	if left.GetType() == WokTypeInteger {
+		switch expr.operator.ttype {
+		case TokenTypePlus:
+			return NewWokInteger(left.ToInteger() + right.ToInteger())
+		case TokenTypeMinus:
+			return NewWokInteger(left.ToInteger() - right.ToInteger())
+		case TokenTypeStar:
+			return NewWokInteger(left.ToInteger() * right.ToInteger())
+		case TokenTypeSlash:
+			return NewWokInteger(left.ToInteger() / right.ToInteger())
+		}
+	}
+
+	if left.GetType() == WokTypeFloat {
+		switch expr.operator.ttype {
+		case TokenTypePlus:
+			return NewWokFloat(left.ToFloat() + right.ToFloat())
+		case TokenTypeMinus:
+			return NewWokFloat(left.ToFloat() - right.ToFloat())
+		case TokenTypeStar:
+			return NewWokFloat(left.ToFloat() * right.ToFloat())
+		case TokenTypeSlash:
+			return NewWokFloat(left.ToFloat() / right.ToFloat())
+		}
+	}
+
+	if left.GetType() == WokTypeString {
+		switch expr.operator.ttype {
+		case TokenTypePlus:
+			return NewWokString(left.ToString() + right.ToString())
+		}
+		interpreter.Error("Only addition can be performed on strings")
+		return NewWokNull()
+	}
+
+	interpreter.Error("Unknown binary operator: " + expr.operator.literal)
+	return NewWokNull()
 }
 
 func (interpreter *Interpreter) VisitExpressionCall(expr *ExpressionCall) WokData {
@@ -72,11 +103,25 @@ func (interpreter *Interpreter) VisitExpressionUnary(expr *ExpressionUnary) WokD
 }
 
 func (interpreter *Interpreter) VisitExpressionValue(expr *ExpressionValue) WokData {
-	value, err := strconv.ParseInt(expr.value.literal, 10, 64)
-	if err != nil {
-		interpreter.Error("string to int failed")
+	switch expr.value.ttype {
+	case TokenTypeInteger:
+		value, err := strconv.ParseInt(expr.value.literal, 10, 64)
+		if err != nil {
+			interpreter.Error(expr.value.literal + "is not a valid integer")
+		}
+		return NewWokInteger(value)
+	case TokenTypeFloat:
+		value, err := strconv.ParseFloat(expr.value.literal, 64)
+		if err != nil {
+			interpreter.Error(expr.value.literal + "is not a valid integer")
+		}
+		return NewWokFloat(value)
+	case TokenTypeString:
+		return NewWokString(expr.value.literal)
 	}
-	return NewWokInteger(value)
+
+	interpreter.Error(expr.value.literal + "is not a valid value")
+	return NewWokNull()
 }
 
 func (interpreter *Interpreter) VisitExpressionVariable(expr *ExpressionVariable) WokData {

@@ -11,6 +11,7 @@ type WokData interface {
 	ToFloat() float64
 	Equals(other WokData) bool
 	GetType() int
+	GetTypeName() string
 	GetValue() interface{}
 }
 
@@ -58,6 +59,10 @@ func (data *WokString) GetType() int {
 	return data.dtype
 }
 
+func (data *WokString) GetTypeName() string {
+	return "string"
+}
+
 func (data *WokString) GetValue() interface{} {
 	return data.value
 }
@@ -93,6 +98,10 @@ func (data *WokInteger) ToFloat() float64 {
 
 func (data *WokInteger) GetType() int {
 	return data.dtype
+}
+
+func (data *WokInteger) GetTypeName() string {
+	return "integer"
 }
 
 func (data *WokInteger) GetValue() interface{} {
@@ -144,6 +153,10 @@ func (data *WokBoolean) GetType() int {
 	return data.dtype
 }
 
+func (data *WokBoolean) GetTypeName() string {
+	return "boolean"
+}
+
 func (data *WokBoolean) GetValue() interface{} {
 	return data.value
 }
@@ -179,6 +192,10 @@ func (data *WokFloat) ToFloat() float64 {
 
 func (data *WokFloat) GetType() int {
 	return data.dtype
+}
+
+func (data *WokFloat) GetTypeName() string {
+	return "float"
 }
 
 func (data *WokFloat) GetValue() interface{} {
@@ -217,6 +234,10 @@ func (data *WokNull) ToFloat() float64 {
 
 func (data *WokNull) GetType() int {
 	return data.dtype
+}
+
+func (data *WokNull) GetTypeName() string {
+	return "null"
 }
 
 func (data *WokNull) GetValue() interface{} {

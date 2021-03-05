@@ -9,9 +9,11 @@ import (
 
 type TokenType int
 
+// Token definitions
 const (
 	// parser tokens
 	TokenTypeEof = 0
+
 	// single character tokens
 	TokenTypeLeftBrace    = 1
 	TokenTypeLeftBracket  = 2
@@ -49,16 +51,24 @@ const (
 	TokenTypeIdentifier = 30
 	TokenTypeString     = 31
 	TokenTypeNull       = 32
+	TokenTypeBoolean    = 39
 	TokenTypeTrue       = 33
 	TokenTypeFalse      = 34
-	TokenTypeNumber     = 35
-	TokenTypePrint      = 36
-	TokenTypeVar        = 37
+	TokenTypeInteger    = 35
+	TokenTypeFloat      = 36
+
+	// reserved
+	TokenTypePrint = 37
+	TokenTypeVar   = 38
 )
 
+// Reserved words dictionary
 var ReservedTokens = map[string]int{
 	"print": TokenTypePrint,
 	"var":   TokenTypeVar,
+	"true":  TokenTypeTrue,
+	"false": TokenTypeFalse,
+	"null":  TokenTypeNull,
 }
 
 type Token struct {
@@ -129,7 +139,6 @@ func (tokenizer *Tokenizer) PeekNext() rune {
 
 func (tokenizer *Tokenizer) AddToken(ttype TokenType, literal string) {
 	tokenizer.tokens = append(tokenizer.tokens, MakeToken(ttype, literal))
-
 }
 
 func (tokenizer *Tokenizer) Tokenize() {
@@ -177,10 +186,26 @@ func (tokenizer *Tokenizer) Identifier() {
 }
 
 func (tokenizer *Tokenizer) Number() {
+	isFloat := false
+
 	for unicode.IsDigit(tokenizer.Peek()) {
 		tokenizer.Advance()
 	}
-	tokenizer.AddToken(TokenTypeNumber, string(tokenizer.source[tokenizer.start:tokenizer.current]))
+
+	if tokenizer.Match('.') && unicode.IsDigit(tokenizer.Peek()) {
+		isFloat = true
+		for unicode.IsDigit(tokenizer.Peek()) {
+			tokenizer.Advance()
+		}
+	}
+
+	var tokenType TokenType
+	if isFloat {
+		tokenType = TokenTypeFloat
+	} else {
+		tokenType = TokenTypeInteger
+	}
+	tokenizer.AddToken(tokenType, string(tokenizer.source[tokenizer.start:tokenizer.current]))
 }
 
 func (tokenizer *Tokenizer) ScanToken() {
@@ -254,5 +279,4 @@ func (tokenizer *Tokenizer) ScanToken() {
 		panic("[Tokenizer] Unexpected character: " + string(char))
 
 	}
-
 }

@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 func main() {
+
 	tokenizer := MakeTokenizer()
 	tokenizer.LoadFromFile("demo.wok")
 	tokenizer.Tokenize()
@@ -13,5 +14,6 @@ func main() {
 	interpreter := MakeInterpreter()
 	interpreter.Interpret(parser.statements)
 
-	fmt.Println("end")
+	fmt.Println("done")
+
 }
