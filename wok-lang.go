@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func main() {
 
 	tokenizer := MakeTokenizer()
@@ -13,7 +11,5 @@ func main() {
 
 	interpreter := MakeInterpreter()
 	interpreter.Interpret(parser.statements)
-
-	fmt.Println("done")
 
 }

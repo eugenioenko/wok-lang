@@ -16,11 +16,11 @@ type VisitorExpression interface {
 }
 
 type ExpressionAssign struct {
-    name Expression
+    name Token
     value Expression
 }
 
-func NewExpressionAssign(name Expression, value Expression) *ExpressionAssign {
+func NewExpressionAssign(name Token, value Expression) *ExpressionAssign {
 	return &ExpressionAssign{name, value}
 }
 
@@ -106,11 +106,11 @@ func (expr *ExpressionValue) Accept (visitor VisitorExpression) WokData {
 }
 
 type ExpressionVariable struct {
-    value Token
+    name Token
 }
 
-func NewExpressionVariable(value Token) *ExpressionVariable {
-	return &ExpressionVariable{value}
+func NewExpressionVariable(name Token) *ExpressionVariable {
+	return &ExpressionVariable{name}
 }
 
 func (expr *ExpressionVariable) Accept (visitor VisitorExpression) WokData {

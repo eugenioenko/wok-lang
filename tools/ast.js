@@ -1,14 +1,14 @@
 let fs = require('fs');
 
 const ExpressionAST = {
-    Assign: ['name Expression', 'value Expression'],
+    Assign: ['name Token', 'value Expression'],
     Binary: ['left Expression', 'operator Token', 'right Expression'],
     Call: ['callee Expression', 'paren Token', 'args []Expression'],
     Grouping: ['expression Expression'],
     Literal: ['value WokData'],
     Unary: ['operator Token', 'right Expression'],
     Value: ['value Token'],
-    Variable: ['value Token']
+    Variable: ['name Token']
 };
 
 const StatementAST = {

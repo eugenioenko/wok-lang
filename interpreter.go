@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -12,7 +13,9 @@ type Interpreter struct {
 }
 
 func MakeInterpreter() Interpreter {
-	return Interpreter{}
+	interpreter := Interpreter{}
+	interpreter.scope = NewScope(nil)
+	return interpreter
 }
 
 func (interpreter *Interpreter) Interpret(statements []Statement) {
@@ -30,11 +33,15 @@ func (interpreter *Interpreter) Evaluate(expr Expression) WokData {
 }
 
 func (interpreter *Interpreter) Error(errorMessage string) {
-	panic(errorMessage)
+	fmt.Println("[Runtime Error] " + errorMessage)
+	os.Exit(1)
 }
 
 func (interpreter *Interpreter) VisitExpressionAssign(expr *ExpressionAssign) WokData {
-	return NewWokNull()
+	value := interpreter.Evaluate(expr.value)
+	name := expr.name.literal
+	interpreter.scope.Set(name, value)
+	return value
 }
 
 func (interpreter *Interpreter) VisitExpressionBinary(expr *ExpressionBinary) WokData {
@@ -125,7 +132,12 @@ func (interpreter *Interpreter) VisitExpressionValue(expr *ExpressionValue) WokD
 }
 
 func (interpreter *Interpreter) VisitExpressionVariable(expr *ExpressionVariable) WokData {
-	return NewWokNull()
+	value, ok := interpreter.scope.Get(expr.name.literal)
+	if ok {
+		return value
+	}
+	interpreter.Error(expr.name.literal + " is not defined")
+	return nil
 }
 
 func (interpreter *Interpreter) VisitStatementExpression(stmt *StatementExpression) WokData {

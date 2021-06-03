@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"os"
+)
+
 type Parser struct {
 	current    int
 	tokens     []Token
@@ -69,7 +74,8 @@ func (parser *Parser) Eof() bool {
 }
 
 func (parser *Parser) Error(token Token, errorMessage string) {
-	panic(errorMessage)
+	fmt.Println("[Parser Error] " + errorMessage)
+	os.Exit(1)
 }
 
 //------------------------------------------------------------------------------
@@ -96,7 +102,11 @@ func (parser *Parser) AssignmentExpression() Expression {
 	expr := parser.EqualityExpression()
 	if parser.Match(TokenTypeEqual) {
 		value := parser.AssignmentExpression()
-		expr = NewExpressionAssign(expr, value)
+		key, ok := expr.(*ExpressionVariable)
+		if !ok {
+			parser.Error(parser.Peek(), "Expected identifier name for assignment")
+		}
+		expr = NewExpressionAssign(key.name, value)
 	}
 	return expr
 }

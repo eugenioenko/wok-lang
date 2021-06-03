@@ -1,1 +1,4 @@
-print 33 + 3 + 4
+a = "hello "
+b = "world"
+c = a + b
+print c
