@@ -62,6 +62,8 @@ const (
 	TokenTypeVar   = 38
 	TokenTypeIf    = 39
 	TokenTypeElse  = 40
+	TokenTypeWhile = 41
+	TokenTypeDo    = 42
 )
 
 // Reserved words dictionary
@@ -73,6 +75,8 @@ var ReservedTokens = map[string]int{
 	"null":  TokenTypeNull,
 	"if":    TokenTypeIf,
 	"else":  TokenTypeElse,
+	"while": TokenTypeWhile,
+	"do":    TokenTypeDo,
 }
 
 type Token struct {

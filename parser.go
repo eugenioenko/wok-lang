@@ -87,6 +87,8 @@ func (parser *Parser) DeclarationStatement() Statement {
 		return parser.PrintStatement()
 	case parser.Match(TokenTypeIf):
 		return parser.IfStatement()
+	case parser.Match(TokenTypeWhile):
+		return parser.WhileStatement()
 	default:
 		return parser.ExpressionStatement()
 	}
@@ -105,6 +107,12 @@ func (parser *Parser) IfStatement() Statement {
 		elseStmt = parser.DeclarationStatement()
 	}
 	return NewStatementIf(ifCond, thenStmt, elseStmt)
+}
+
+func (parser *Parser) WhileStatement() Statement {
+	cond := parser.ExpressionExpression()
+	loop := parser.DeclarationStatement()
+	return NewStatementWhile(cond, loop)
 }
 
 func (parser *Parser) ExpressionStatement() Statement {

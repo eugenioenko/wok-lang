@@ -5,3 +5,8 @@ if 2 == 2
     print "yes"
 else
     print "no"
+
+e = 1
+while e == 1
+    e = e + 1
+print e

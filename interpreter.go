@@ -179,6 +179,10 @@ func (interpreter *Interpreter) VisitStatementVar(stmt *StatementVar) WokData {
 }
 
 func (interpreter *Interpreter) VisitStatementWhile(stmt *StatementWhile) WokData {
+	for interpreter.Evaluate(stmt.condition).ToBoolean() {
+		interpreter.Execute(stmt.loop)
+	}
+
 	return NewWokNull()
 }
 
