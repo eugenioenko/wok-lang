@@ -1,4 +1,7 @@
-a = "hello "
-b = "world"
-c = a + b
-print c
+a = 3.0 * 5.0 - 10.0 / 20.0 + 10.0 - 14.3
+print a
+print 2 == 3
+if 2 == 2
+    print "yes"
+else
+    print "no"

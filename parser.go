@@ -74,7 +74,7 @@ func (parser *Parser) Eof() bool {
 }
 
 func (parser *Parser) Error(token Token, errorMessage string) {
-	fmt.Println("[Parser Error] " + errorMessage)
+	fmt.Println("[Syntax Error] " + errorMessage)
 	os.Exit(1)
 }
 
@@ -82,20 +82,38 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 // AST STARTS HERE
 //------------------------------------------------------------------------------
 func (parser *Parser) DeclarationStatement() Statement {
-	if parser.Match(TokenTypePrint) {
+	switch {
+	case parser.Match(TokenTypePrint):
 		return parser.PrintStatement()
+	case parser.Match(TokenTypeIf):
+		return parser.IfStatement()
+	default:
+		return parser.ExpressionStatement()
 	}
-	return parser.ExpressionStatement()
 }
 
 func (parser *Parser) PrintStatement() Statement {
-	expr := parser.AssignmentExpression()
+	expr := parser.ExpressionExpression()
 	return NewStatementPrint(expr)
 }
 
+func (parser *Parser) IfStatement() Statement {
+	ifCond := parser.ExpressionExpression()
+	thenStmt := parser.DeclarationStatement()
+	var elseStmt Statement = nil
+	if parser.Match(TokenTypeElse) {
+		elseStmt = parser.DeclarationStatement()
+	}
+	return NewStatementIf(ifCond, thenStmt, elseStmt)
+}
+
 func (parser *Parser) ExpressionStatement() Statement {
-	expr := parser.AssignmentExpression()
+	expr := parser.ExpressionExpression()
 	return NewStatementExpression(expr)
+}
+
+func (parser *Parser) ExpressionExpression() Expression {
+	return parser.AssignmentExpression()
 }
 
 func (parser *Parser) AssignmentExpression() Expression {
@@ -171,6 +189,6 @@ func (parser *Parser) PrimaryExpression() Expression {
 	case parser.Match(TokenTypeIdentifier):
 		return NewExpressionVariable(parser.Previous())
 	}
-	parser.Error(parser.Peek(), "Unexpected token")
+	parser.Error(parser.Peek(), "Unexpected token '"+parser.Peek().literal+"'")
 	return nil
 }

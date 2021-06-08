@@ -54,29 +54,38 @@ func (interpreter *Interpreter) VisitExpressionBinary(expr *ExpressionBinary) Wo
 		interpreter.Error(error)
 		return NewWokNull()
 	}
+
 	if left.GetType() == WokTypeInteger {
+		l := left.ToInteger()
+		r := right.ToInteger()
 		switch expr.operator.ttype {
 		case TokenTypePlus:
-			return NewWokInteger(left.ToInteger() + right.ToInteger())
+			return NewWokInteger(l + r)
 		case TokenTypeMinus:
-			return NewWokInteger(left.ToInteger() - right.ToInteger())
+			return NewWokInteger(l - r)
 		case TokenTypeStar:
-			return NewWokInteger(left.ToInteger() * right.ToInteger())
+			return NewWokInteger(l * r)
 		case TokenTypeSlash:
-			return NewWokInteger(left.ToInteger() / right.ToInteger())
+			return NewWokInteger(l / r)
+		case TokenTypeEqualEqual:
+			return NewWokBoolean(l == r)
 		}
 	}
 
 	if left.GetType() == WokTypeFloat {
+		l := left.ToFloat()
+		r := right.ToFloat()
 		switch expr.operator.ttype {
 		case TokenTypePlus:
-			return NewWokFloat(left.ToFloat() + right.ToFloat())
+			return NewWokFloat(l + r)
 		case TokenTypeMinus:
-			return NewWokFloat(left.ToFloat() - right.ToFloat())
+			return NewWokFloat(l - r)
 		case TokenTypeStar:
-			return NewWokFloat(left.ToFloat() * right.ToFloat())
+			return NewWokFloat(l * r)
 		case TokenTypeSlash:
-			return NewWokFloat(left.ToFloat() / right.ToFloat())
+			return NewWokFloat(l / r)
+		case TokenTypeEqualEqual:
+			return NewWokBoolean(l == r)
 		}
 	}
 
@@ -84,6 +93,8 @@ func (interpreter *Interpreter) VisitExpressionBinary(expr *ExpressionBinary) Wo
 		switch expr.operator.ttype {
 		case TokenTypePlus:
 			return NewWokString(left.ToString() + right.ToString())
+		case TokenTypeEqualEqual:
+			return NewWokBoolean(left.ToString() == right.ToString())
 		}
 		interpreter.Error("Only addition can be performed on strings")
 		return NewWokNull()
@@ -149,6 +160,13 @@ func (interpreter *Interpreter) VisitStatementFunc(stmt *StatementFunc) WokData 
 }
 
 func (interpreter *Interpreter) VisitStatementIf(stmt *StatementIf) WokData {
+	condition := interpreter.Evaluate(stmt.condition)
+	if condition.ToBoolean() {
+		return interpreter.Execute(stmt.thenStmt)
+	}
+	if stmt.elseStmt != nil {
+		return interpreter.Execute(stmt.elseStmt)
+	}
 	return NewWokNull()
 }
 
