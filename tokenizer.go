@@ -56,27 +56,13 @@ const (
 	TokenTypeFalse      = 34
 	TokenTypeInteger    = 35
 	TokenTypeFloat      = 36
-
-	// reserved
-	TokenTypePrint = 37
-	TokenTypeVar   = 38
-	TokenTypeIf    = 39
-	TokenTypeElse  = 40
-	TokenTypeWhile = 41
-	TokenTypeDo    = 42
 )
 
 // Reserved words dictionary
 var ReservedTokens = map[string]int{
-	"print": TokenTypePrint,
-	"var":   TokenTypeVar,
 	"true":  TokenTypeTrue,
 	"false": TokenTypeFalse,
 	"null":  TokenTypeNull,
-	"if":    TokenTypeIf,
-	"else":  TokenTypeElse,
-	"while": TokenTypeWhile,
-	"do":    TokenTypeDo,
 }
 
 type Token struct {
@@ -171,7 +157,7 @@ func (tokenizer *Tokenizer) String() {
 		tokenizer.Advance()
 	}
 	if tokenizer.Eof() {
-		panic("Unterminated string, expecting clsoing quote")
+		panic("Unterminated string, expecting closing quote")
 	}
 	// the closing quote
 	tokenizer.Advance()

@@ -6,20 +6,20 @@ import (
 )
 
 type Parser struct {
-	current    int
-	tokens     []Token
-	statements []Statement
+	current     int
+	tokens      []Token
+	expressions []Expression
 }
 
-func (parser *Parser) Parse(tokens []Token) []Statement {
+func (parser *Parser) Parse(tokens []Token) []Expression {
 	parser.current = 0
-	parser.statements = make([]Statement, 0)
+	parser.expressions = make([]Expression, 0)
 	parser.tokens = tokens
 	for !parser.Eof() {
-		stmt := parser.DeclarationStatement()
-		parser.statements = append(parser.statements, stmt)
+		stmt := parser.Statement()
+		parser.expressions = append(parser.expressions, stmt)
 	}
-	return parser.statements
+	return parser.expressions
 }
 
 func MakeParser() Parser {
@@ -81,121 +81,30 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 //------------------------------------------------------------------------------
 // AST STARTS HERE
 //------------------------------------------------------------------------------
-func (parser *Parser) DeclarationStatement() Statement {
-	switch {
-	case parser.Match(TokenTypePrint):
-		return parser.PrintStatement()
-	case parser.Match(TokenTypeIf):
-		return parser.IfStatement()
-	case parser.Match(TokenTypeWhile):
-		return parser.WhileStatement()
-	default:
-		return parser.ExpressionStatement()
-	}
+func (parser *Parser) Statement() Expression {
+	return parser.ListExpression()
 }
 
-func (parser *Parser) PrintStatement() Statement {
-	expr := parser.ExpressionExpression()
-	return NewStatementPrint(expr)
-}
-
-func (parser *Parser) IfStatement() Statement {
-	ifCond := parser.ExpressionExpression()
-	thenStmt := parser.DeclarationStatement()
-	var elseStmt Statement = nil
-	if parser.Match(TokenTypeElse) {
-		elseStmt = parser.DeclarationStatement()
-	}
-	return NewStatementIf(ifCond, thenStmt, elseStmt)
-}
-
-func (parser *Parser) WhileStatement() Statement {
-	cond := parser.ExpressionExpression()
-	loop := parser.DeclarationStatement()
-	return NewStatementWhile(cond, loop)
-}
-
-func (parser *Parser) ExpressionStatement() Statement {
-	expr := parser.ExpressionExpression()
-	return NewStatementExpression(expr)
-}
-
-func (parser *Parser) ExpressionExpression() Expression {
-	return parser.AssignmentExpression()
-}
-
-func (parser *Parser) AssignmentExpression() Expression {
-	expr := parser.EqualityExpression()
-	if parser.Match(TokenTypeEqual) {
-		value := parser.AssignmentExpression()
-		key, ok := expr.(*ExpressionVariable)
-		if !ok {
-			parser.Error(parser.Peek(), "Expected identifier name for assignment")
+func (parser *Parser) ListExpression() Expression {
+	if parser.Match(TokenTypeLeftParen) {
+		args := make([]Expression, 0)
+		for !parser.Check(TokenTypeRightParen) {
+			args = append(args, parser.ListExpression())
 		}
-		expr = NewExpressionAssign(key.name, value)
+		parser.Consume("Expected closing ')' after function call", TokenTypeRightParen)
+		return NewExpressionList(args)
+	} else {
+		return parser.AtomExpression()
 	}
-	return expr
 }
 
-func (parser *Parser) EqualityExpression() Expression {
-	expr := parser.ComparisonExpression()
-	for parser.Match(TokenTypeEqualEqual) {
-		oprtr := parser.Previous()
-		right := parser.ComparisonExpression()
-		expr = NewExpressionBinary(expr, oprtr, right)
-	}
-	return expr
-}
-
-func (parser *Parser) ComparisonExpression() Expression {
-	expr := parser.AdditionExpression()
-	for parser.Match(
-		TokenTypeGreater, TokenTypeLess,
-		TokenTypeGreaterEqual, TokenTypeLessEqual) {
-		oprtr := parser.Previous()
-		right := parser.AdditionExpression()
-		expr = NewExpressionBinary(expr, oprtr, right)
-	}
-	return expr
-}
-
-func (parser *Parser) AdditionExpression() Expression {
-	expr := parser.MultiplicationExpression()
-	for parser.Match(TokenTypePlus, TokenTypeMinus) {
-		oprtr := parser.Previous()
-		right := parser.MultiplicationExpression()
-		expr = NewExpressionBinary(expr, oprtr, right)
-	}
-	return expr
-}
-
-func (parser *Parser) MultiplicationExpression() Expression {
-	expr := parser.UnaryExpression()
-	for parser.Match(TokenTypeSlash, TokenTypeStar) {
-		oprtr := parser.Previous()
-		right := parser.UnaryExpression()
-		expr = NewExpressionBinary(expr, oprtr, right)
-	}
-	return expr
-}
-
-func (parser *Parser) UnaryExpression() Expression {
-	if parser.Match(TokenTypeBang, TokenTypeMinus, TokenTypePlus) {
-		oprtr := parser.Previous()
-		right := parser.PrimaryExpression()
-		return NewExpressionUnary(oprtr, right)
-	}
-	return parser.PrimaryExpression()
-}
-
-func (parser *Parser) PrimaryExpression() Expression {
+func (parser *Parser) AtomExpression() Expression {
 	switch {
 	case parser.Match(TokenTypeInteger),
 		parser.Match(TokenTypeFloat),
-		parser.Match(TokenTypeString):
-		return NewExpressionValue(parser.Previous())
-	case parser.Match(TokenTypeIdentifier):
-		return NewExpressionVariable(parser.Previous())
+		parser.Match(TokenTypeString),
+		parser.Match(TokenTypeIdentifier):
+		return NewExpressionAtom(parser.Previous())
 	}
 	parser.Error(parser.Peek(), "Unexpected token '"+parser.Peek().literal+"'")
 	return nil
