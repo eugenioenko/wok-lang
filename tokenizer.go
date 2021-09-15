@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
+	"os"
 	"unicode"
 )
 
@@ -90,7 +92,7 @@ func MakeTokenizer() Tokenizer {
 func (tokenizer *Tokenizer) LoadFromFile(fileName string) {
 	content, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		panic(err)
+		tokenizer.Error(err.Error())
 	}
 	tokenizer.source = content
 	tokenizer.tokens = make([]Token, 0)
@@ -135,6 +137,11 @@ func (tokenizer *Tokenizer) AddToken(ttype TokenType, literal string) {
 	tokenizer.tokens = append(tokenizer.tokens, MakeToken(ttype, literal))
 }
 
+func (tokenizer *Tokenizer) Error(errorMessage string) {
+	fmt.Println("[Scanner Error] " + errorMessage)
+	os.Exit(1)
+}
+
 func (tokenizer *Tokenizer) Tokenize() {
 	tokenizer.current = 0
 	tokenizer.start = 0
@@ -157,7 +164,7 @@ func (tokenizer *Tokenizer) String() {
 		tokenizer.Advance()
 	}
 	if tokenizer.Eof() {
-		panic("Unterminated string, expecting closing quote")
+		tokenizer.Error("Unterminated string, expecting closing quote")
 	}
 	// the closing quote
 	tokenizer.Advance()
@@ -270,7 +277,7 @@ func (tokenizer *Tokenizer) ScanToken() {
 	case char == '\n':
 	case char == '\r':
 	default:
-		panic("[Tokenizer] Unexpected character: " + string(char))
+		tokenizer.Error("[Tokenizer] Unexpected character: " + string(char))
 
 	}
 }

@@ -28,7 +28,7 @@ func MakeParser() Parser {
 
 func (parser *Parser) Match(tokenTypes ...TokenType) bool {
 	for _, tokenType := range tokenTypes {
-		if parser.tokens[parser.current].ttype == tokenType {
+		if parser.Peek().ttype == tokenType {
 			parser.Advance()
 			return true
 		}
@@ -38,7 +38,7 @@ func (parser *Parser) Match(tokenTypes ...TokenType) bool {
 
 func (parser *Parser) Check(tokenTypes ...TokenType) bool {
 	for _, tokenType := range tokenTypes {
-		currentType := parser.tokens[parser.current].ttype
+		currentType := parser.Peek().ttype
 		if currentType == tokenType {
 			return true
 		}
@@ -50,7 +50,8 @@ func (parser *Parser) Consume(errorMessage string, tokenTypes ...TokenType) Toke
 	if parser.Check(tokenTypes...) {
 		return parser.Advance()
 	}
-	panic(errorMessage)
+	parser.Error(parser.Peek(), errorMessage)
+	return parser.Peek()
 }
 
 func (parser *Parser) Advance() Token {
@@ -69,7 +70,7 @@ func (parser *Parser) Peek() Token {
 }
 
 func (parser *Parser) Eof() bool {
-	return parser.tokens[parser.current].ttype == TokenTypeEof ||
+	return parser.Peek().ttype == TokenTypeEof ||
 		parser.current >= len(parser.tokens)
 }
 
@@ -82,6 +83,9 @@ func (parser *Parser) Error(token Token, errorMessage string) {
 // AST STARTS HERE
 //------------------------------------------------------------------------------
 func (parser *Parser) Statement() Expression {
+	if !parser.Check(TokenTypeLeftParen) {
+		parser.Error(parser.Peek(), "Expected opening '(' before expression call")
+	}
 	return parser.ListExpression()
 }
 
@@ -91,7 +95,7 @@ func (parser *Parser) ListExpression() Expression {
 		for !parser.Check(TokenTypeRightParen) {
 			args = append(args, parser.ListExpression())
 		}
-		parser.Consume("Expected closing ')' after function call", TokenTypeRightParen)
+		parser.Consume("Expected closing ')' after list", TokenTypeRightParen)
 		return NewExpressionList(args)
 	} else {
 		return parser.AtomExpression()
@@ -99,13 +103,11 @@ func (parser *Parser) ListExpression() Expression {
 }
 
 func (parser *Parser) AtomExpression() Expression {
-	switch {
-	case parser.Match(TokenTypeInteger),
-		parser.Match(TokenTypeFloat),
-		parser.Match(TokenTypeString),
-		parser.Match(TokenTypeIdentifier):
-		return NewExpressionAtom(parser.Previous())
+	atom := parser.Peek()
+	if atom.ttype != TokenTypeEof {
+		parser.Advance()
+		return NewExpressionAtom(atom)
 	}
-	parser.Error(parser.Peek(), "Unexpected token '"+parser.Peek().literal+"'")
+	parser.Error(parser.Previous(), "Unexpected end of file")
 	return nil
 }
