@@ -138,7 +138,7 @@ func (tokenizer *Tokenizer) AddToken(ttype TokenType, literal string) {
 }
 
 func (tokenizer *Tokenizer) Error(errorMessage string) {
-	fmt.Println("[Scanner Error] " + errorMessage)
+	fmt.Println("[Scan Error] " + errorMessage)
 	os.Exit(1)
 }
 

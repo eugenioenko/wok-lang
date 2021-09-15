@@ -16,11 +16,12 @@ type WokData interface {
 }
 
 const (
-	WokTypeNull    = 0
-	WokTypeBool    = 1
-	WokTypeInteger = 2
-	WokTypeFloat   = 3
-	WokTypeString  = 4
+	WokTypeNull     = 0
+	WokTypeBool     = 1
+	WokTypeInteger  = 2
+	WokTypeFloat    = 3
+	WokTypeString   = 4
+	WokTypeFunction = 5
 )
 
 type WokString struct {
@@ -203,8 +204,6 @@ func (data *WokFloat) GetValue() interface{} {
 }
 
 func (data *WokFloat) Equals(other WokData) bool {
-	// TODO: check if type asertion other.(int64) is faster then interface{} comparison
-	// https://golang.org/ref/spec#Comparison_operators
 	return data.GetType() == other.GetType() && data.value == other.GetValue()
 }
 
@@ -213,7 +212,7 @@ type WokNull struct {
 }
 
 func NewWokNull() *WokNull {
-	return &WokNull{dtype: WokTypeString}
+	return &WokNull{dtype: WokTypeNull}
 }
 
 func (data *WokNull) ToString() string {
@@ -246,4 +245,48 @@ func (data *WokNull) GetValue() interface{} {
 
 func (data *WokNull) Equals(other WokData) bool {
 	return data.GetType() == other.GetType() && data.dtype == WokTypeNull
+}
+
+type Function func(*Interpreter, []Expression) WokData
+
+type WokFunction struct {
+	function Function
+	name     string
+	dtype    int
+}
+
+func NewWokFunction(name string, function Function) *WokFunction {
+	return &WokFunction{dtype: WokTypeFunction, name: name, function: function}
+}
+
+func (data *WokFunction) ToString() string {
+	return data.name
+}
+
+func (data *WokFunction) ToBoolean() bool {
+	return true
+}
+
+func (data *WokFunction) ToInteger() int64 {
+	return 0
+}
+
+func (data *WokFunction) ToFloat() float64 {
+	return 0
+}
+
+func (data *WokFunction) GetType() int {
+	return data.dtype
+}
+
+func (data *WokFunction) GetTypeName() string {
+	return "function"
+}
+
+func (data *WokFunction) GetValue() interface{} {
+	return data.function
+}
+
+func (data *WokFunction) Equals(other WokData) bool {
+	return other.GetType() == WokTypeFunction && data.GetValue() == other.GetValue()
 }

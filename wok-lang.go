@@ -9,8 +9,6 @@ func main() {
 	parser := MakeParser()
 	parser.Parse(tokenizer.tokens)
 
-	println("end")
-
-	// interpreter := MakeInterpreter()
-	// interpreter.Interpret(parser.expressions)
+	interpreter := MakeInterpreter()
+	interpreter.Interpret(parser.expressions)
 }
