@@ -37,8 +37,11 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 	if len(expr.value) == 0 {
 		return NewWokNull()
 	}
-	function := interpreter.Evaluate(expr.value[0]).GetValue().(Function)
-	function(interpreter, expr.value)
+	callee := interpreter.Evaluate(expr.value[0])
+	if callee.GetType() == WokTypeFunction {
+		function := callee.GetValue().(Function)
+		function(interpreter, expr.value)
+	}
 	return NewWokNull()
 }
 
