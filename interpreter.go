@@ -41,13 +41,14 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 	callee := interpreter.Evaluate(expr.value[0])
 	if callee.GetType() == WokTypeFunction {
 		function := callee.GetValue().(Function)
-		function(interpreter, expr.value)
+		return function(interpreter, expr.value)
 	}
 	return NewWokNull()
 }
 
 func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokData {
 	literal := expr.value.literal
+
 	switch expr.value.ttype {
 	case TokenTypeString:
 		return NewWokString(literal)
@@ -58,15 +59,23 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	case TokenTypeBoolean:
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
 	case TokenTypeIdentifier:
-		runtimeValue, ok := interpreter.runtime.Get(literal)
-		if ok {
-			return runtimeValue
-		}
-		scopeValue, ok := interpreter.scope.Get(literal)
-		if ok {
-			return scopeValue
-		}
-		return NewWokNull()
+		return GetIdentifierFromScope(interpreter, literal)
+	}
+
+	if expr.value.ttype >= TokenTypeArrow && expr.value.ttype <= TokenTypeStarEqual {
+		return GetIdentifierFromScope(interpreter, literal)
+	}
+	return NewWokNull()
+}
+
+func GetIdentifierFromScope(interpreter *Interpreter, literal string) WokData {
+	runtimeValue, ok := interpreter.runtime.Get(literal)
+	if ok {
+		return runtimeValue
+	}
+	scopeValue, ok := interpreter.scope.Get(literal)
+	if ok {
+		return scopeValue
 	}
 	return NewWokNull()
 }
