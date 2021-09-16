@@ -6,15 +6,16 @@ import (
 )
 
 type Interpreter struct {
-	scope *Scope
-	root  *Scope
+	root    *Scope
+	scope   *Scope
+	runtime *Scope
 }
 
 func MakeInterpreter() Interpreter {
 	interpreter := Interpreter{}
+	interpreter.runtime = &Scope{parent: nil, values: RuntimeScope}
 	interpreter.root = NewScope(nil)
 	interpreter.scope = NewScope(interpreter.root)
-	interpreter.root.Set("print", NewWokFunction("print", runtimePrint))
 	return interpreter
 }
 
@@ -57,9 +58,9 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	case TokenTypeBoolean:
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
 	case TokenTypeIdentifier:
-		rootValue, ok := interpreter.root.Get(literal)
+		runtimeValue, ok := interpreter.runtime.Get(literal)
 		if ok {
-			return rootValue
+			return runtimeValue
 		}
 		scopeValue, ok := interpreter.scope.Get(literal)
 		if ok {
