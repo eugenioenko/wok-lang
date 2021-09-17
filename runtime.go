@@ -4,6 +4,7 @@ import "fmt"
 
 var RuntimeScope = map[string]WokData{
 	"print": WF("print", RuntimePrint),
+	"cond":  WF("cond", RuntimeCond),
 	"+":     WF("+", RuntimeAddition),
 	"*":     WF("*", RuntimeMultiplication),
 	"-":     WF("-", RuntimeSubstraction),
@@ -61,6 +62,11 @@ func RuntimeSubstraction(interpreter *Interpreter, expressions []Expression) Wok
 }
 
 func RuntimeCond(interpreter *Interpreter, expressions []Expression) WokData {
-
+	for _, expression := range expressions {
+		condition := expression.(*ExpressionList).value
+		if interpreter.Evaluate(condition[0]).ToBoolean() {
+			return interpreter.Evaluate(condition[1])
+		}
+	}
 	return NewWokNull()
 }
