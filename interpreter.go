@@ -59,23 +59,17 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	case TokenTypeBoolean:
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
 	case TokenTypeIdentifier:
-		return GetIdentifierFromScope(interpreter, literal)
-	}
-
-	if expr.value.ttype >= TokenTypeArrow && expr.value.ttype <= TokenTypeStarEqual {
-		return GetIdentifierFromScope(interpreter, literal)
-	}
-	return NewWokNull()
-}
-
-func GetIdentifierFromScope(interpreter *Interpreter, literal string) WokData {
-	runtimeValue, ok := interpreter.runtime.Get(literal)
-	if ok {
-		return runtimeValue
-	}
-	scopeValue, ok := interpreter.scope.Get(literal)
-	if ok {
-		return scopeValue
+		scopeValue, ok := interpreter.scope.Get(literal)
+		if ok {
+			return scopeValue
+		}
+		return NewWokNull()
+	case TokenTypeReserved:
+		runtimeValue, ok := interpreter.runtime.Get(literal)
+		if ok {
+			return runtimeValue
+		}
+		return NewWokNull()
 	}
 	return NewWokNull()
 }

@@ -50,21 +50,23 @@ const (
 	TokenTypeStarEqual    = 29
 
 	// literals
-	TokenTypeIdentifier = 30
-	TokenTypeString     = 31
-	TokenTypeNull       = 32
-	TokenTypeBoolean    = 39
-	TokenTypeTrue       = 33
-	TokenTypeFalse      = 34
-	TokenTypeInteger    = 35
-	TokenTypeFloat      = 36
+	TokenTypeReserved   = 30
+	TokenTypeIdentifier = 31
+	TokenTypeString     = 32
+	TokenTypeNull       = 33
+	TokenTypeBoolean    = 34
+	TokenTypeTrue       = 35
+	TokenTypeFalse      = 36
+	TokenTypeInteger    = 37
+	TokenTypeFloat      = 38
 )
 
 // Reserved words dictionary
-var ReservedTokens = map[string]int{
-	"true":  TokenTypeTrue,
-	"false": TokenTypeFalse,
-	"null":  TokenTypeNull,
+var ReservedTokens = map[string]string{
+	"if":    "if",
+	"while": "while",
+	"print": "print",
+	"write": "print",
 }
 
 type Token struct {
@@ -159,8 +161,9 @@ func (tokenizer *Tokenizer) Comment() {
 	}
 }
 
-func (tokenizer *Tokenizer) String() {
-	for tokenizer.Peek() != '"' && !tokenizer.Eof() {
+func (tokenizer *Tokenizer) String(quote rune) {
+
+	for tokenizer.Peek() != quote && !tokenizer.Eof() {
 		tokenizer.Advance()
 	}
 	if tokenizer.Eof() {
@@ -180,7 +183,7 @@ func (tokenizer *Tokenizer) Identifier() {
 	token := string(tokenizer.source[tokenizer.start:tokenizer.current])
 	reserved, ok := ReservedTokens[token]
 	if ok {
-		tokenizer.AddToken(TokenType(reserved), token)
+		tokenizer.AddToken(TokenTypeReserved, reserved)
 	} else {
 		tokenizer.AddToken(TokenTypeIdentifier, token)
 	}
@@ -209,73 +212,45 @@ func (tokenizer *Tokenizer) Number() {
 	tokenizer.AddToken(tokenType, string(tokenizer.source[tokenizer.start:tokenizer.current]))
 }
 
+func (tokenizer *Tokenizer) twoChar(char rune) bool {
+	return (char == '<' && tokenizer.Match('=')) ||
+		(char == '>' && tokenizer.Match('=')) ||
+		(char == '!' && tokenizer.Match('=')) ||
+		(char == '=' && tokenizer.Match('=')) ||
+		(char == ':' && tokenizer.Match('=')) ||
+		(char == '/' && tokenizer.Match('='))
+}
+
+func (tokenizer *Tokenizer) oneChar(char rune) bool {
+	return char == '*' || char == '+' || char == '-' || char == '<' ||
+		char == '>' || char == '!' || char == '=' || char == '/'
+}
+
+func (tokenizer *Tokenizer) ignoreChar(char rune) bool {
+	return char == ' ' || char == '\t' || char == '\n' || char == '\r'
+}
+
 func (tokenizer *Tokenizer) ScanToken() {
-	var char rune = rune(tokenizer.Advance())
+	char := rune(tokenizer.Advance())
 	switch {
 	case char == '(':
 		tokenizer.AddToken(TokenTypeLeftParen, "(")
 	case char == ')':
 		tokenizer.AddToken(TokenTypeRightParen, ")")
-	case char == '[':
-		tokenizer.AddToken(TokenTypeLeftBracket, "[")
-	case char == ']':
-		tokenizer.AddToken(TokenTypeRightBracket, "]")
-	case char == '{':
-		tokenizer.AddToken(TokenTypeLeftBrace, "{")
-	case char == '}':
-		tokenizer.AddToken(TokenTypeRightBrace, "}")
-	case char == ',':
-		tokenizer.AddToken(TokenTypeComma, ",")
-	case char == ':':
-		tokenizer.AddToken(TokenTypeColon, ":")
-	case char == ';':
-		tokenizer.AddToken(TokenTypeSemicolon, ";")
-	case char == '.':
-		tokenizer.AddToken(TokenTypeDot, ".")
-	case char == '*' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeStarEqual, "*=")
-	case char == '*':
-		tokenizer.AddToken(TokenTypeStar, "*")
-	case char == '+' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypePlusEqual, "+=")
-	case char == '+':
-		tokenizer.AddToken(TokenTypePlus, "+")
-	case char == '-' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeMinusEqual, "-=")
-	case char == '-':
-		tokenizer.AddToken(TokenTypeMinus, "-")
-	case char == '<' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeLessEqual, "<=")
-	case char == '<':
-		tokenizer.AddToken(TokenTypeLess, "<")
-	case char == '>' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeGreaterEqual, ">=")
-	case char == '>':
-		tokenizer.AddToken(TokenTypeGreater, ">")
-	case char == '!' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeBangEqual, "!=")
-	case char == '!':
-		tokenizer.AddToken(TokenTypeBang, "!")
-	case char == '=' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeEqualEqual, "==")
-	case char == '=':
-		tokenizer.AddToken(TokenTypeEqual, "=")
-	case char == '/' && tokenizer.Match('/'):
-		tokenizer.Comment()
-	case char == '/' && tokenizer.Match('='):
-		tokenizer.AddToken(TokenTypeSlashEqual, "/=")
-	case char == '/':
-		tokenizer.AddToken(TokenTypeSlash, "/")
-	case char == '"':
-		tokenizer.String()
+	case tokenizer.twoChar(char):
+		tokenizer.AddToken(TokenTypeReserved, string(char)+"=")
+	case tokenizer.oneChar(char):
+		tokenizer.AddToken(TokenTypeReserved, string(char))
+	case char == '"' || char == '\'':
+		tokenizer.String(char)
 	case unicode.IsDigit(char):
 		tokenizer.Number()
 	case unicode.IsLetter(char):
 		tokenizer.Identifier()
-	case char == ' ':
-	case char == '\t':
-	case char == '\n':
-	case char == '\r':
+	case char == ';':
+		tokenizer.Comment()
+	case tokenizer.ignoreChar(char):
+		break
 	default:
 		tokenizer.Error("[Tokenizer] Unexpected character: " + string(char))
 
