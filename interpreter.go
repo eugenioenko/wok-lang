@@ -41,7 +41,7 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 	callee := interpreter.Evaluate(expr.value[0])
 	if callee.GetType() == WokTypeFunction {
 		function := callee.GetValue().(Function)
-		return function(interpreter, expr.value)
+		return function(interpreter, expr.value[1:])
 	}
 	return NewWokNull()
 }
@@ -63,12 +63,14 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 		if ok {
 			return scopeValue
 		}
+		interpreter.Error(fmt.Sprintf("Undefined '%s'", literal))
 		return NewWokNull()
 	case TokenTypeReserved:
 		runtimeValue, ok := interpreter.runtime.Get(literal)
 		if ok {
 			return runtimeValue
 		}
+		interpreter.Error(fmt.Sprintf("Undefined predicate '%s'", literal))
 		return NewWokNull()
 	}
 	return NewWokNull()

@@ -14,18 +14,20 @@ func WF(name string, function Function) *WokFunction {
 }
 
 func EvalParams(interpreter *Interpreter, expressions []Expression) []WokData {
-	params := make([]WokData, len(expressions)-1)
-	for index, expression := range expressions[1:] {
+	params := make([]WokData, len(expressions))
+	for index, expression := range expressions {
 		params[index] = interpreter.Evaluate(expression)
 	}
 	return params
 }
 
 func RuntimePrint(interpreter *Interpreter, expressions []Expression) WokData {
-	for _, expr := range expressions[1:] {
-		fmt.Println(interpreter.Evaluate(expr).ToString())
+	var result WokData
+	for _, expr := range expressions {
+		result = interpreter.Evaluate(expr)
+		fmt.Println(result.ToString())
 	}
-	return NewWokNull()
+	return result
 }
 
 func RuntimeAddition(interpreter *Interpreter, expressions []Expression) WokData {
@@ -56,4 +58,9 @@ func RuntimeSubstraction(interpreter *Interpreter, expressions []Expression) Wok
 		return total
 	}, params[0].ToInteger())
 	return NewWokInteger(count)
+}
+
+func RuntimeCond(interpreter *Interpreter, expressions []Expression) WokData {
+
+	return NewWokNull()
 }

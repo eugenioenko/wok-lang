@@ -67,6 +67,7 @@ var ReservedTokens = map[string]string{
 	"while": "while",
 	"print": "print",
 	"write": "print",
+	"cond":  "cond",
 }
 
 type Token struct {
