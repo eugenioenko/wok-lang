@@ -1,4 +1,4 @@
-package wokdata
+package woklang
 
 type Function func(*Interpreter, []Expression) WokData
 

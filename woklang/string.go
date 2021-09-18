@@ -1,4 +1,4 @@
-package wokdata
+package woklang
 
 import "strconv"
 

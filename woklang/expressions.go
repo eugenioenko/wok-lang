@@ -1,4 +1,4 @@
-package expressions
+package woklang
 
 type Expression interface {
 	Accept(visitor VisitorExpression) WokData

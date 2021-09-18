@@ -1,4 +1,4 @@
-package tests
+package woklang
 
 import (
 	"testing"

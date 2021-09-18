@@ -1,4 +1,4 @@
-package tokenizer
+package woklang
 
 // Token and TokenTypes
 

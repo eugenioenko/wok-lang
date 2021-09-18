@@ -1,4 +1,4 @@
-package wokdata
+package woklang
 
 type WokBoolean struct {
 	value bool

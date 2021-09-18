@@ -1,4 +1,4 @@
-package utils
+package woklang
 
 /*
 func Reduce(items []WokData, reducer func(WokData, WokData, int, []WokData) WokData, initial WokData) WokData {

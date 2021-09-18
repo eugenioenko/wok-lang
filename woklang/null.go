@@ -1,4 +1,4 @@
-package wokdata
+package woklang
 
 type WokNull struct {
 	dtype int
