@@ -1,18 +1,6 @@
 package main
 
-import woklang "wok/src"
-
-func WokEvaluate(source string) woklang.WokData {
-	tokenizer := woklang.MakeTokenizer()
-	tokenizer.LoadFromString(source)
-	tokens := tokenizer.Tokenize()
-
-	parser := woklang.MakeParser()
-	expressions := parser.Parse(tokens)
-
-	interpreter := woklang.MakeInterpreter()
-	return interpreter.Interpret(expressions)
-}
+import "wok/woklang"
 
 func main() {
 
