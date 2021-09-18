@@ -5,6 +5,7 @@ import "fmt"
 var RuntimeScope = map[string]WokData{
 	"print": WF("print", RuntimePrint),
 	"cond":  WF("cond", RuntimeCond),
+	"debug": WF("debug", RuntimeDebug),
 	"if":    WF("if", RuntimeIf),
 	"+":     WF("+", RuntimeAddition),
 	"*":     WF("*", RuntimeMultiplication),
@@ -21,6 +22,10 @@ func EvalParams(interpreter *Interpreter, expressions []Expression) []WokData {
 		params[index] = interpreter.Evaluate(expression)
 	}
 	return params
+}
+
+func RuntimeDebug(interpreter *Interpreter, expressions []Expression) WokData {
+	return interpreter.Evaluate(expressions[0])
 }
 
 func RuntimePrint(interpreter *Interpreter, expressions []Expression) WokData {

@@ -7,7 +7,8 @@ type TokenType int
 // Token definitions
 const (
 	// parser tokens
-	TokenTypeEof = 0
+	TokenTypeEof  = -1
+	TokenTypeNull = 0
 
 	// single character tokens
 	TokenTypeLeftBrace    = 1
@@ -46,7 +47,6 @@ const (
 	TokenTypeReserved   = 30
 	TokenTypeIdentifier = 31
 	TokenTypeString     = 32
-	TokenTypeNull       = 33
 	TokenTypeBoolean    = 34
 	TokenTypeTrue       = 35
 	TokenTypeFalse      = 36

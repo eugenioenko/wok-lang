@@ -7,15 +7,6 @@ import (
 	"unicode"
 )
 
-// Reserved words dictionary
-var ReservedTokens = map[string]string{
-	"if":    "if",
-	"while": "while",
-	"print": "print",
-	"write": "print",
-	"cond":  "cond",
-}
-
 // Tokenizer
 // Converts a source file into an array of tokens
 type Tokenizer struct {
@@ -125,12 +116,19 @@ func (tokenizer *Tokenizer) Identifier() {
 		tokenizer.Advance()
 	}
 	token := string(tokenizer.source[tokenizer.start:tokenizer.current])
+	runtime, ok := RuntimeTokens[token]
+	if ok {
+		tokenizer.AddToken(TokenTypeReserved, runtime)
+		return
+	}
+
 	reserved, ok := ReservedTokens[token]
 	if ok {
-		tokenizer.AddToken(TokenTypeReserved, reserved)
-	} else {
-		tokenizer.AddToken(TokenTypeIdentifier, token)
+		tokenizer.AddToken(reserved, token)
+		return
 	}
+
+	tokenizer.AddToken(TokenTypeIdentifier, token)
 }
 
 func (tokenizer *Tokenizer) Number() {

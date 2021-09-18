@@ -52,6 +52,12 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	literal := expr.value.literal
 
 	switch expr.value.ttype {
+	case TokenTypeNull:
+		return NewWokNull()
+	case TokenTypeTrue:
+		return NewWokBoolean(true)
+	case TokenTypeFalse:
+		return NewWokBoolean(false)
 	case TokenTypeString:
 		return NewWokString(literal)
 	case TokenTypeInteger:

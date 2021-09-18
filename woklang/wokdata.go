@@ -13,7 +13,7 @@ type WokData interface {
 
 const (
 	WokTypeNull     = 0
-	WokTypeBool     = 1
+	WokTypeBoolean  = 1
 	WokTypeInteger  = 2
 	WokTypeFloat    = 3
 	WokTypeString   = 4

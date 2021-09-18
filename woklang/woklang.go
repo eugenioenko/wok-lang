@@ -9,5 +9,6 @@ func Eval(source string) WokData {
 	expressions := parser.Parse(tokens)
 
 	interpreter := MakeInterpreter()
-	return interpreter.Interpret(expressions)
+	result := interpreter.Interpret(expressions)
+	return result
 }
