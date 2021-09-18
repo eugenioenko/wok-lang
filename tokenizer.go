@@ -101,6 +101,11 @@ func (tokenizer *Tokenizer) LoadFromFile(fileName string) {
 	tokenizer.tokens = make([]Token, 0)
 }
 
+func (tokenizer *Tokenizer) LoadFromString(source string) {
+	tokenizer.source = []byte(source)
+	tokenizer.tokens = make([]Token, 0)
+}
+
 func (tokenizer *Tokenizer) Eof() bool {
 	return tokenizer.current >= len(tokenizer.source)
 }

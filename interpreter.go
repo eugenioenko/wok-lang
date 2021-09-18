@@ -19,10 +19,12 @@ func MakeInterpreter() Interpreter {
 	return interpreter
 }
 
-func (interpreter *Interpreter) Interpret(statements []Expression) {
+func (interpreter *Interpreter) Interpret(statements []Expression) WokData {
+	var result WokData = NewWokNull()
 	for _, statement := range statements {
-		interpreter.Evaluate(statement)
+		result = interpreter.Evaluate(statement)
 	}
+	return result
 }
 
 func (interpreter *Interpreter) Evaluate(expr Expression) WokData {

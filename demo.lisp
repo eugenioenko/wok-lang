@@ -7,3 +7,8 @@
   (0 (print "1"))
   (2 (print "2"))
 )
+
+(if 1
+  (print "yes")
+  (print "no")
+)
