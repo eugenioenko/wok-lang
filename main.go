@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	v := woklang.Eval("(debug 1)")
+	v := woklang.Eval("(debug true)")
 	fmt.Print(v.ToString())
 	tokenizer := woklang.MakeTokenizer()
 	tokenizer.LoadFromFile("demo.lisp")

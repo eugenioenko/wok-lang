@@ -6,7 +6,7 @@ type WokBoolean struct {
 }
 
 func NewWokBoolean(value bool) *WokBoolean {
-	return &WokBoolean{value: value, dtype: WokTypeString}
+	return &WokBoolean{value: value, dtype: WokTypeBoolean}
 }
 func (data *WokBoolean) ToString() string {
 	if data.value {

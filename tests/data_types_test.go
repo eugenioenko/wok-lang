@@ -37,8 +37,9 @@ func TestShouldBeString(t *testing.T) {
 	}
 }
 func TestShouldBeBooleanTrue(t *testing.T) {
-	v := w.Eval("(debug true")
+	v := w.Eval("(debug true)")
 	if v.GetType() != w.WokTypeBoolean {
+		fmt.Print(v.ToString())
 		t.Fail()
 	}
 	if v.ToBoolean() != true {
@@ -47,7 +48,7 @@ func TestShouldBeBooleanTrue(t *testing.T) {
 }
 
 func TestShouldBeBooleanFalse(t *testing.T) {
-	v := w.Eval("(debug false")
+	v := w.Eval("(debug false)")
 	if v.GetType() != w.WokTypeBoolean {
 		t.Fail()
 	}
