@@ -1,7 +1,7 @@
-package main
+package expressions
 
 type Expression interface {
-    Accept(visitor VisitorExpression) WokData
+	Accept(visitor VisitorExpression) WokData
 }
 
 type VisitorExpression interface {
@@ -10,26 +10,25 @@ type VisitorExpression interface {
 }
 
 type ExpressionList struct {
-    value []Expression
+	value []Expression
 }
 
 func NewExpressionList(value []Expression) *ExpressionList {
 	return &ExpressionList{value}
 }
 
-func (expr *ExpressionList) Accept (visitor VisitorExpression) WokData {
+func (expr *ExpressionList) Accept(visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionList(expr)
 }
 
 type ExpressionAtom struct {
-    value Token
+	value Token
 }
 
 func NewExpressionAtom(value Token) *ExpressionAtom {
 	return &ExpressionAtom{value}
 }
 
-func (expr *ExpressionAtom) Accept (visitor VisitorExpression) WokData {
+func (expr *ExpressionAtom) Accept(visitor VisitorExpression) WokData {
 	return visitor.VisitExpressionAtom(expr)
 }
-
