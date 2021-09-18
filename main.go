@@ -1,28 +1,28 @@
 package main
 
-import "woklang/woklang"
+import woklang "wok/src"
 
 func WokEvaluate(source string) woklang.WokData {
 	tokenizer := woklang.MakeTokenizer()
 	tokenizer.LoadFromString(source)
-	tokenizer.Tokenize()
+	tokens := tokenizer.Tokenize()
 
 	parser := woklang.MakeParser()
-	parser.Parse(tokenizer.tokens)
+	expressions := parser.Parse(tokens)
 
 	interpreter := woklang.MakeInterpreter()
-	return interpreter.Interpret(parser.expressions)
+	return interpreter.Interpret(expressions)
 }
 
 func main() {
 
 	tokenizer := woklang.MakeTokenizer()
 	tokenizer.LoadFromFile("demo.lisp")
-	tokenizer.Tokenize()
+	tokens := tokenizer.Tokenize()
 
 	parser := woklang.MakeParser()
-	parser.Parse(tokenizer.tokens)
+	expressions := parser.Parse(tokens)
 
 	interpreter := woklang.MakeInterpreter()
-	interpreter.Interpret(parser.expressions)
+	interpreter.Interpret(expressions)
 }

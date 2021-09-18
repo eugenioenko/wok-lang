@@ -1,3 +1,3 @@
-module woklang
+module wok
 
 go 1.16

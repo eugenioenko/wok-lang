@@ -22,7 +22,7 @@ type Tokenizer struct {
 	source  []byte
 	current int
 	start   int
-	Tokens  []Token
+	tokens  []Token
 }
 
 func MakeTokenizer() Tokenizer {
@@ -35,12 +35,12 @@ func (tokenizer *Tokenizer) LoadFromFile(fileName string) {
 		tokenizer.Error(err.Error())
 	}
 	tokenizer.source = content
-	tokenizer.Tokens = make([]Token, 0)
+	tokenizer.tokens = make([]Token, 0)
 }
 
 func (tokenizer *Tokenizer) LoadFromString(source string) {
 	tokenizer.source = []byte(source)
-	tokenizer.Tokens = make([]Token, 0)
+	tokenizer.tokens = make([]Token, 0)
 }
 
 func (tokenizer *Tokenizer) Eof() bool {
@@ -79,7 +79,7 @@ func (tokenizer *Tokenizer) PeekNext() rune {
 }
 
 func (tokenizer *Tokenizer) AddToken(ttype TokenType, literal string) {
-	tokenizer.Tokens = append(tokenizer.Tokens, MakeToken(ttype, literal))
+	tokenizer.tokens = append(tokenizer.tokens, MakeToken(ttype, literal))
 }
 
 func (tokenizer *Tokenizer) Error(errorMessage string) {
@@ -87,7 +87,7 @@ func (tokenizer *Tokenizer) Error(errorMessage string) {
 	os.Exit(1)
 }
 
-func (tokenizer *Tokenizer) Tokenize() {
+func (tokenizer *Tokenizer) Tokenize() []Token {
 	tokenizer.current = 0
 	tokenizer.start = 0
 
@@ -96,6 +96,7 @@ func (tokenizer *Tokenizer) Tokenize() {
 		tokenizer.ScanToken()
 	}
 	tokenizer.AddToken(TokenTypeEof, "")
+	return tokenizer.tokens
 }
 
 func (tokenizer *Tokenizer) Comment() {
