@@ -1,4 +1,4 @@
-package main
+package woklang
 
 // Scope holds the structure of the environment of the runtime data state
 type Scope struct {
