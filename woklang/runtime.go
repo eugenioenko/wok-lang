@@ -7,6 +7,7 @@ var RuntimeScope = map[string]WokData{
 	"cond":  WF("cond", RuntimeCond),
 	"debug": WF("debug", RuntimeDebug),
 	"if":    WF("if", RuntimeIf),
+	":=":    WF(":=", RuntimeAssignment),
 	"+":     WF("+", RuntimeAddition),
 	"*":     WF("*", RuntimeMultiplication),
 	"-":     WF("-", RuntimeSubstraction),
@@ -35,6 +36,13 @@ func RuntimePrint(interpreter *Interpreter, expressions []Expression) WokData {
 		fmt.Println(result.ToString())
 	}
 	return result
+}
+
+func RuntimeAssignment(interpreter *Interpreter, expressions []Expression) WokData {
+	value := interpreter.Evaluate(expressions[1])
+	token := expressions[0].(*ExpressionAtom).value.literal
+	interpreter.scope.Set(token, value)
+	return value
 }
 
 func RuntimeAddition(interpreter *Interpreter, expressions []Expression) WokData {

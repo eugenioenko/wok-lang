@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"wok/woklang"
 )
 
 func main() {
-	v := woklang.Eval("(debug true)")
-	fmt.Print(v.ToString())
 	tokenizer := woklang.MakeTokenizer()
 	tokenizer.LoadFromFile("demo.lisp")
 	tokens := tokenizer.Tokenize()

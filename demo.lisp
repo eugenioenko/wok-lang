@@ -13,4 +13,6 @@
   ;(print "no")
 ;)
 
-(print "test")
+(:= x "valuessss")
+(print x)
+
