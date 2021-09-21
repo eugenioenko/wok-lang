@@ -12,6 +12,7 @@
   ;(print "yes")
   ;(print "no")
 ;)
+(print "hello world")
 (:= index 0)
 (print index)
 (while (! (== index 10))
