@@ -26,16 +26,18 @@ func main() {
 }
 
 func help() {
-	fmt.Print(`Wok is an interpreter of WokLang programming language.
+	fmt.Print(`
+Wok is the interpreter of WokLang programming language.
 
 Usage:
 
-  go <command> [arguments]
+  wok command [arguments]
 
   The commands are:
 
       exec [filename]     executes the script with filename
       eval [code]         executes the code passed as argument
       help                prints this message
+
 `)
 }
