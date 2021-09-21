@@ -28,6 +28,15 @@ func MathReduce(items []WokData, reducer func(int64, WokData, int) int64, initia
 	return accumulator
 }
 
+func Every(items []WokData, f func(WokData, int) bool) bool {
+	for index, v := range items {
+		if !f(v, index) {
+			return false
+		}
+	}
+	return true
+}
+
 /*
 func Any(vs []WokData, f func(WokData) bool) bool {
 	for _, v := range vs {

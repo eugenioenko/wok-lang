@@ -5,9 +5,11 @@ import "fmt"
 var RuntimeScope = map[string]WokData{
 	"print": WF("print", RuntimePrint),
 	"cond":  WF("cond", RuntimeCond),
+	"while": WF("while", RuntimeWhile),
 	"debug": WF("debug", RuntimeDebug),
 	"if":    WF("if", RuntimeIf),
 	":=":    WF(":=", RuntimeAssignment),
+	"==":    WF("==", RuntimeEquality),
 	"+":     WF("+", RuntimeAddition),
 	"*":     WF("*", RuntimeMultiplication),
 	"-":     WF("-", RuntimeSubstraction),
@@ -43,6 +45,14 @@ func RuntimeAssignment(interpreter *Interpreter, expressions []Expression) WokDa
 	token := expressions[0].(*ExpressionAtom).value.literal
 	interpreter.scope.Set(token, value)
 	return value
+}
+
+func RuntimeEquality(interpreter *Interpreter, expressions []Expression) WokData {
+	params := EvalParams(interpreter, expressions)
+	result := Every(params, func(item WokData, index int) bool {
+		return item.GetType() == params[0].GetType() && item.GetValue() == params[0].GetValue()
+	})
+	return NewWokBoolean(result)
 }
 
 func RuntimeAddition(interpreter *Interpreter, expressions []Expression) WokData {
@@ -99,4 +109,12 @@ func RuntimeIf(interpreter *Interpreter, expressions []Expression) WokData {
 		}
 	}
 	return NewWokNull()
+}
+
+func RuntimeWhile(interpreter *Interpreter, expressions []Expression) WokData {
+	var result WokData = NewWokNull()
+	for interpreter.Evaluate(expressions[0]).ToBoolean() {
+		result = interpreter.Evaluate(expressions[1])
+	}
+	return result
 }
