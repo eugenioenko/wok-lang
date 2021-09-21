@@ -15,7 +15,7 @@ end up diverging from it
 
 > wok exec [filename] will execute the script
 
-> wok eval code will execute the code passed as argument
+> wok eval [code] will execute the code passed as argument
 
 ## Updates
 
