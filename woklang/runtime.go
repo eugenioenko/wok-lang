@@ -10,6 +10,7 @@ var RuntimeScope = map[string]WokData{
 	"if":    WF("if", RuntimeIf),
 	":=":    WF(":=", RuntimeAssignment),
 	"==":    WF("==", RuntimeEquality),
+	"!":     WF("!", RuntimeNegation),
 	"+":     WF("+", RuntimeAddition),
 	"*":     WF("*", RuntimeMultiplication),
 	"-":     WF("-", RuntimeSubstraction),
@@ -117,4 +118,9 @@ func RuntimeWhile(interpreter *Interpreter, expressions []Expression) WokData {
 		result = interpreter.Evaluate(expressions[1])
 	}
 	return result
+}
+
+func RuntimeNegation(interpreter *Interpreter, expressions []Expression) WokData {
+	result := interpreter.Evaluate(expressions[0])
+	return NewWokBoolean(!result.ToBoolean())
 }

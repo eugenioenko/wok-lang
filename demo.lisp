@@ -12,7 +12,11 @@
   ;(print "yes")
   ;(print "no")
 ;)
-
-(:= x "valuessss")
-(print x)
+(:= index 0)
+(print index)
+(while (! (== index 10))
+  (print
+    (:= index (+ index 1))
+  )
+)
 
