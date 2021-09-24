@@ -63,6 +63,7 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	case TokenTypeInteger:
 		return NewWokInteger(NewWokString(literal).ToInteger())
 	case TokenTypeFloat:
+
 		return NewWokFloat(NewWokString(literal).ToFloat())
 	case TokenTypeBoolean:
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
