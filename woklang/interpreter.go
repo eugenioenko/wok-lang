@@ -40,6 +40,7 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 	if len(expr.value) == 0 {
 		return NewWokNull()
 	}
+
 	callee := interpreter.Evaluate(expr.value[0])
 	if callee.GetType() == WokTypeFunction {
 		function := callee.GetValue().(Function)
