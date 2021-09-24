@@ -68,6 +68,7 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
 	case TokenTypeIdentifier:
 		scopeValue, ok := interpreter.scope.Get(literal)
+
 		if ok {
 			return scopeValue
 		}
