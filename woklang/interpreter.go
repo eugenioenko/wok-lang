@@ -37,21 +37,21 @@ func (interpreter *Interpreter) Error(errorMessage string) {
 }
 
 func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokData {
-	if len(expr.value) == 0 {
+	if len(expr.List) == 0 {
 		return NewWokNull()
 	}
-	callee := interpreter.Evaluate(expr.value[0])
+	callee := interpreter.Evaluate(expr.List[0])
 	if callee.GetType() == WokTypeFunction {
 		function := callee.GetValue().(Function)
-		return function(interpreter, expr.value[1:])
+		return function(interpreter, expr.List[1:])
 	}
 	return NewWokNull()
 }
 
 func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokData {
-	literal := expr.value.Literal
+	literal := expr.Atom.Literal
 
-	switch expr.value.Type {
+	switch expr.Atom.Type {
 	case TokenTypeNull:
 		return NewWokNull()
 	case TokenTypeTrue:

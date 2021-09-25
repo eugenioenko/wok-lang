@@ -43,7 +43,7 @@ func RuntimePrint(interpreter *Interpreter, expressions []Expression) WokData {
 
 func RuntimeAssignment(interpreter *Interpreter, expressions []Expression) WokData {
 	value := interpreter.Evaluate(expressions[1])
-	token := expressions[0].(*ExpressionAtom).value.Literal
+	token := expressions[0].(*ExpressionAtom).Atom.Literal
 	interpreter.scope.Set(token, value)
 	return value
 }
@@ -88,7 +88,7 @@ func RuntimeSubstraction(interpreter *Interpreter, expressions []Expression) Wok
 
 func RuntimeCond(interpreter *Interpreter, expressions []Expression) WokData {
 	for _, expression := range expressions {
-		condition := expression.(*ExpressionList).value
+		condition := expression.(*ExpressionList).List
 		if interpreter.Evaluate(condition[0]).ToBoolean() {
 			return interpreter.Evaluate(condition[1])
 		}
