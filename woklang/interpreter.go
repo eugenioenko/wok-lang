@@ -51,7 +51,7 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokData {
 	literal := expr.value.literal
 
-	switch expr.value.ttype {
+	switch expr.value.Type {
 	case TokenTypeNull:
 		return NewWokNull()
 	case TokenTypeTrue:

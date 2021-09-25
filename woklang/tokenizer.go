@@ -69,8 +69,8 @@ func (tokenizer *Tokenizer) PeekNext() rune {
 	return rune(tokenizer.source[tokenizer.current+1])
 }
 
-func (tokenizer *Tokenizer) AddToken(ttype TokenType, literal string) {
-	tokenizer.tokens = append(tokenizer.tokens, MakeToken(ttype, literal))
+func (tokenizer *Tokenizer) AddToken(Type TokenType, literal string) {
+	tokenizer.tokens = append(tokenizer.tokens, MakeToken(Type, literal))
 }
 
 func (tokenizer *Tokenizer) Error(errorMessage string) {
