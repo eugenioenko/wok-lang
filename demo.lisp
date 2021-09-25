@@ -1,28 +1,32 @@
-;(print (+ 1 2 3))
-;(print (- 2))
-;(print (- 8 4))
-;(print (print "yes"))
-;(cond
-  ;(0 (print "0"))
-  ;(0 (print "1"))
-  ;(2 (print "2"))
-;)
-;
-;(if 1
-  ;(print "yes")
-  ;(print "no")
-;)
-(defun addition (alpha beta)
+(print (+ 1 2 3))
+(print (- 2))
+(print (- 8 4))
+(print (print "yes"))
+(cond
+  (0 (print "0"))
+  (0 (print "1"))
+  (2 (print "2"))
+)
+
+(if 1
+  (print "yes")
+  (print "no")
+)
+
+(print "hello world")
+(:= index 0)
+(print index)
+(while (! (== index 10))
+  (print
+    (:= index (+ index 1))
+  )
+)
+
+
+(defun function (alpha beta)
   (print alpha)
   (print beta)
 )
 
-;(print "hello world")
-;(:= index 0)
-;(print index)
-;(while (! (== index 10))
-  ;(print
-    ;(:= index (+ index 1))
-  ;)
-;)
+(function "hello" "world")
 
