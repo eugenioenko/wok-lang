@@ -1,7 +1,7 @@
 package woklang
 
 func WF(name string, function Callable) *WokCallable {
-	return &WokCallable{dtype: WokTypeFunction, name: name, function: function}
+	return &WokCallable{DType: WokTypeFunction, name: name, function: function}
 }
 
 func EvalParams(interpreter *Interpreter, expressions []Expression) []WokData {

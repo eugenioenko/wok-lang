@@ -5,11 +5,11 @@ type Callable func(*Interpreter, []Expression) WokData
 type WokCallable struct {
 	function Callable
 	name     string
-	dtype    int
+	DType    int
 }
 
 func NewWokCallable(name string, function Callable) *WokCallable {
-	return &WokCallable{dtype: WokTypeFunction, name: name, function: function}
+	return &WokCallable{DType: WokTypeFunction, name: name, function: function}
 }
 
 func (data *WokCallable) ToString() string {
@@ -29,7 +29,7 @@ func (data *WokCallable) ToFloat() float64 {
 }
 
 func (data *WokCallable) GetType() int {
-	return data.dtype
+	return data.DType
 }
 
 func (data *WokCallable) GetTypeName() string {

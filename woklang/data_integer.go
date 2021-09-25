@@ -3,32 +3,32 @@ package woklang
 import "strconv"
 
 type WokInteger struct {
-	value int64
-	dtype int
+	Value int64
+	DType int
 }
 
 func NewWokInteger(value int64) *WokInteger {
-	return &WokInteger{value: value, dtype: WokTypeInteger}
+	return &WokInteger{Value: value, DType: WokTypeInteger}
 }
 
 func (data *WokInteger) ToString() string {
-	return strconv.FormatInt(data.value, 10)
+	return strconv.FormatInt(data.Value, 10)
 }
 
 func (data *WokInteger) ToBoolean() bool {
-	return data.value != 0
+	return data.Value != 0
 }
 
 func (data *WokInteger) ToInteger() int64 {
-	return data.value
+	return data.Value
 }
 
 func (data *WokInteger) ToFloat() float64 {
-	return float64(data.value)
+	return float64(data.Value)
 }
 
 func (data *WokInteger) GetType() int {
-	return data.dtype
+	return data.DType
 }
 
 func (data *WokInteger) GetTypeName() string {
@@ -36,9 +36,9 @@ func (data *WokInteger) GetTypeName() string {
 }
 
 func (data *WokInteger) GetValue() interface{} {
-	return data.value
+	return data.Value
 }
 
 func (data *WokInteger) Equals(other WokData) bool {
-	return data.GetType() == other.GetType() && data.value == other.GetValue()
+	return data.GetType() == other.GetType() && data.Value == other.GetValue()
 }

@@ -1,11 +1,11 @@
 package woklang
 
 type WokNull struct {
-	dtype int
+	DType int
 }
 
 func NewWokNull() *WokNull {
-	return &WokNull{dtype: WokTypeNull}
+	return &WokNull{DType: WokTypeNull}
 }
 
 func (data *WokNull) ToString() string {
@@ -25,7 +25,7 @@ func (data *WokNull) ToFloat() float64 {
 }
 
 func (data *WokNull) GetType() int {
-	return data.dtype
+	return data.DType
 }
 
 func (data *WokNull) GetTypeName() string {
