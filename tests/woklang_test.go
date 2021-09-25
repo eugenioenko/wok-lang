@@ -12,6 +12,7 @@ func TestAddition(t *testing.T) {
 	total := Eval(source).ToInteger()
 	if total != 31 {
 		t.Fail()
+
 	}
 }
 
