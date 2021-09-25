@@ -17,5 +17,6 @@ const (
 	WokTypeInteger  = 2
 	WokTypeFloat    = 3
 	WokTypeString   = 4
-	WokTypeFunction = 5
+	WokTypeCallable = 5
+	WokTypeFunction = 6
 )

@@ -12,12 +12,17 @@
   ;(print "yes")
   ;(print "no")
 ;)
-(print "hello world")
-(:= index 0)
-(print index)
-(while (! (== index 10))
-  (print
-    (:= index (+ index 1))
-  )
+(defun addition (alpha beta)
+  (print alpha)
+  (print beta)
 )
+
+;(print "hello world")
+;(:= index 0)
+;(print index)
+;(while (! (== index 10))
+  ;(print
+    ;(:= index (+ index 1))
+  ;)
+;)
 

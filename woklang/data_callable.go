@@ -9,7 +9,7 @@ type WokCallable struct {
 }
 
 func NewWokCallable(name string, function Callable) *WokCallable {
-	return &WokCallable{DType: WokTypeFunction, name: name, function: function}
+	return &WokCallable{DType: WokTypeCallable, name: name, function: function}
 }
 
 func (data *WokCallable) ToString() string {

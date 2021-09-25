@@ -7,6 +7,7 @@ var RuntimeTokens = map[string]string{
 	"write": "print",
 	"cond":  "cond",
 	"debug": "debug",
+	"defun": "defun",
 }
 
 var ReservedTokens = map[string]TokenType{

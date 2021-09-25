@@ -6,16 +6,16 @@ import (
 )
 
 type Interpreter struct {
-	root    *Scope
-	scope   *Scope
-	runtime *Scope
+	Root    *Scope
+	Scope   *Scope
+	Runtime *Scope
 }
 
 func MakeInterpreter() Interpreter {
 	interpreter := Interpreter{}
-	interpreter.runtime = &Scope{parent: nil, values: RuntimeScope}
-	interpreter.root = NewScope(nil)
-	interpreter.scope = NewScope(interpreter.root)
+	interpreter.Runtime = &Scope{parent: nil, values: RuntimeScope}
+	interpreter.Root = NewScope(nil)
+	interpreter.Scope = NewScope(interpreter.Root)
 	return interpreter
 }
 
@@ -41,7 +41,7 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 		return NewWokNull()
 	}
 	callee := interpreter.Evaluate(expr.List[0])
-	if callee.GetType() == WokTypeFunction {
+	if callee.GetType() == WokTypeCallable {
 		function := callee.GetValue().(Callable)
 		return function(interpreter, expr.List[1:])
 	}
@@ -67,14 +67,14 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	case TokenTypeBoolean:
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
 	case TokenTypeIdentifier:
-		scopeValue, ok := interpreter.scope.Get(literal)
+		scopeValue, ok := interpreter.Scope.Get(literal)
 		if ok {
 			return scopeValue
 		}
 		interpreter.Error(fmt.Sprintf("Undefined '%s'", literal))
 		return NewWokNull()
 	case TokenTypeReserved:
-		runtimeValue, ok := interpreter.runtime.Get(literal)
+		runtimeValue, ok := interpreter.Runtime.Get(literal)
 		if ok {
 			return runtimeValue
 		}
