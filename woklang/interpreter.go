@@ -49,6 +49,7 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 		return function(interpreter, expr.value[1:])
 	}
 	return NewWokNull()
+
 }
 
 func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokData {
