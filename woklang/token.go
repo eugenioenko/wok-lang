@@ -56,7 +56,7 @@ const (
 
 type Token struct {
 	Type    TokenType
-	literal string
+	Literal string
 }
 
 func MakeToken(Type TokenType, literal string) Token {

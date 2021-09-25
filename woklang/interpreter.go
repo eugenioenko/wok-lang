@@ -49,7 +49,7 @@ func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokDat
 }
 
 func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokData {
-	literal := expr.value.literal
+	literal := expr.value.Literal
 
 	switch expr.value.Type {
 	case TokenTypeNull:
