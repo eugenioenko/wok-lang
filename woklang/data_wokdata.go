@@ -19,4 +19,5 @@ const (
 	WokTypeString   = 4
 	WokTypeCallable = 5
 	WokTypeFunction = 6
+	WokTypeReturn   = 7
 )

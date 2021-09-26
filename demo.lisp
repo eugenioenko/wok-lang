@@ -25,8 +25,10 @@
 
 (defun function (alpha beta)
   (print alpha)
+  (return-from "function" "the_return_value")
   (print beta)
 )
 
 (function "hello" "world")
+(print (function "first" "second"))
 

@@ -36,6 +36,33 @@ func (interpreter *Interpreter) Error(errorMessage string) {
 	os.Exit(1)
 }
 
+func (interpreter *Interpreter) FunctionCall(function *WokFunction, expressions []Expression) (result WokData) {
+	params := EvalParams(interpreter, expressions)
+	paramsMaxIndex := len(params) - 1
+	scope := interpreter.Scope
+	interpreter.Scope = NewScope(scope)
+	for index := 0; index < len(function.args); index++ {
+		if index <= paramsMaxIndex {
+			interpreter.Scope.Set(function.args[index], params[index])
+		} else {
+			interpreter.Scope.Set(function.args[index], NewWokNull())
+		}
+	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			ret := err.(*WokReturn)
+			if ret.From == function.name {
+				result = err.(*WokReturn).Value
+				interpreter.Scope = scope
+			}
+		}
+	}()
+	result = interpreter.Interpret(function.body)
+	interpreter.Scope = scope
+	return result
+}
+
 func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokData {
 	if len(expr.List) == 0 {
 		return NewWokNull()

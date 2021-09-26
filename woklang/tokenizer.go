@@ -112,6 +112,7 @@ func (tokenizer *Tokenizer) String(quote rune) {
 func (tokenizer *Tokenizer) Identifier() {
 	for unicode.IsLetter(tokenizer.Peek()) ||
 		unicode.IsDigit(tokenizer.Peek()) ||
+		tokenizer.Peek() == '-' ||
 		tokenizer.Peek() == '_' {
 		tokenizer.Advance()
 	}
