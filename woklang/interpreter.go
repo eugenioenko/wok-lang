@@ -19,8 +19,13 @@ func MakeInterpreter() Interpreter {
 	return interpreter
 }
 
-func (interpreter *Interpreter) Interpret(statements []Expression) WokData {
-	var result WokData = NewWokNull()
+func (interpreter *Interpreter) Interpret(statements []Expression) (result WokData) {
+	defer func() {
+		if err := recover(); err != nil {
+			interpreter.Error("Oops! Unhandled Error")
+			result = NewWokNull()
+		}
+	}()
 	for _, statement := range statements {
 		result = interpreter.Evaluate(statement)
 	}
@@ -55,6 +60,8 @@ func (interpreter *Interpreter) FunctionCall(function *WokFunction, expressions 
 			if ret.From == function.name || ret.From == "" {
 				result = err.(*WokReturn).Value
 				interpreter.Scope = scope
+			} else {
+				panic(err)
 			}
 		}
 	}()
