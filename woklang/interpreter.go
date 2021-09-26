@@ -20,12 +20,6 @@ func MakeInterpreter() Interpreter {
 }
 
 func (interpreter *Interpreter) Interpret(statements []Expression) (result WokData) {
-	defer func() {
-		if err := recover(); err != nil {
-			interpreter.Error("Oops! Unhandled Error")
-			result = NewWokNull()
-		}
-	}()
 	for _, statement := range statements {
 		result = interpreter.Evaluate(statement)
 	}

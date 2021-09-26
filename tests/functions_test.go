@@ -1,7 +1,6 @@
 package testing
 
 import (
-	"fmt"
 	"testing"
 	"wok/woklang"
 )
@@ -45,7 +44,7 @@ func TestFunctionShouldNullUndefinedParams(t *testing.T) {
 	}
 }
 
-func TestFunctionShouldFromInner(t *testing.T) {
+func TestFunctionShouldReturnFromInner(t *testing.T) {
 	source := `
 		(defun function (a b c)
 			(defun inner (x y z)
@@ -57,8 +56,24 @@ func TestFunctionShouldFromInner(t *testing.T) {
 		(debug (function 1 2 3))
 	`
 	result := woklang.Eval(source)
-	fmt.Print(result.ToInteger())
 	if result.ToInteger() != 777 {
+		t.Fail()
+	}
+}
+
+func TestFunctionShouldThrow(t *testing.T) {
+	source := `
+		(defun function (a b c)
+			(defun inner (x y z)
+				(return-from function_does_not_exist 777)
+			)
+			(inner 1 2 3)
+			(return c)
+		)
+		(debug (function 1 2 3))
+	`
+	result := woklang.Eval(source)
+	if result.GetType() != woklang.WokTypeException {
 		t.Fail()
 	}
 }

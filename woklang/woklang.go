@@ -1,6 +1,16 @@
 package woklang
 
-func Eval(source string) WokData {
+import (
+	"fmt"
+)
+
+func Eval(source string) (result WokData) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("[Runtime Error] Oops! Unhandled Error")
+			result = NewWokException("Unhandled Exception")
+		}
+	}()
 	tokenizer := MakeTokenizer()
 	tokenizer.LoadFromString(source)
 	tokens := tokenizer.Tokenize()
@@ -9,11 +19,17 @@ func Eval(source string) WokData {
 	expressions := parser.Parse(tokens)
 
 	interpreter := MakeInterpreter()
-	result := interpreter.Interpret(expressions)
+	result = interpreter.Interpret(expressions)
 	return result
 }
 
-func Exec(filename string) WokData {
+func Exec(filename string) (result WokData) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("[Runtime Error] Oops! Unhandled Error")
+			result = NewWokException("Unhandled Exception")
+		}
+	}()
 	tokenizer := MakeTokenizer()
 	tokenizer.LoadFromFile(filename)
 	tokens := tokenizer.Tokenize()

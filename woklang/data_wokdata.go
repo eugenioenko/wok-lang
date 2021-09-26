@@ -12,12 +12,13 @@ type WokData interface {
 }
 
 const (
-	WokTypeNull     = 0
-	WokTypeBoolean  = 1
-	WokTypeInteger  = 2
-	WokTypeFloat    = 3
-	WokTypeString   = 4
-	WokTypeCallable = 5
-	WokTypeFunction = 6
-	WokTypeReturn   = 7
+	WokTypeNull      = 0
+	WokTypeBoolean   = 1
+	WokTypeInteger   = 2
+	WokTypeFloat     = 3
+	WokTypeString    = 4
+	WokTypeCallable  = 5
+	WokTypeFunction  = 6
+	WokTypeReturn    = 7
+	WokTypeException = 8
 )
