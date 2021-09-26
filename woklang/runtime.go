@@ -7,6 +7,7 @@ var RuntimeScope = map[string]WokData{
 	"debug":       WF("debug", RuntimeDebug),
 	"defun":       WF("defun", RuntimeDefun),
 	"return-from": WF("return-from", RuntimeReturnFrom),
+	"return":      WF("return", RuntimeReturn),
 	"if":          WF("if", RuntimeIf),
 	":=":          WF(":=", RuntimeAssignment),
 	"==":          WF("==", RuntimeEquality),

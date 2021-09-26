@@ -17,3 +17,9 @@ func RuntimeReturnFrom(interpreter *Interpreter, expressions []Expression) WokDa
 
 	panic(NewWokReturn(from, result))
 }
+
+func RuntimeReturn(interpreter *Interpreter, expressions []Expression) WokData {
+	result := interpreter.Evaluate(expressions[0])
+
+	panic(NewWokReturn("", result))
+}

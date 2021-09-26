@@ -32,3 +32,9 @@
 (function "hello" "world")
 (print (function "first" "second"))
 
+
+(defun addition (a b)
+  (return (+ a b))
+)
+
+(print (addition 100 1))

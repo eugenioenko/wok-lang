@@ -8,6 +8,7 @@ var RuntimeTokens = map[string]string{
 	"cond":        "cond",
 	"debug":       "debug",
 	"defun":       "defun",
+	"return":      "return",
 	"return-from": "return-from",
 }
 

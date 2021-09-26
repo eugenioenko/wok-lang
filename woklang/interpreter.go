@@ -52,7 +52,7 @@ func (interpreter *Interpreter) FunctionCall(function *WokFunction, expressions 
 	defer func() {
 		if err := recover(); err != nil {
 			ret := err.(*WokReturn)
-			if ret.From == function.name {
+			if ret.From == function.name || ret.From == "" {
 				result = err.(*WokReturn).Value
 				interpreter.Scope = scope
 			}
