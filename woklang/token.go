@@ -55,10 +55,10 @@ const (
 )
 
 type Token struct {
-	ttype   TokenType
-	literal string
+	Type    TokenType
+	Literal string
 }
 
-func MakeToken(ttype TokenType, literal string) Token {
-	return Token{ttype, literal}
+func MakeToken(Type TokenType, literal string) Token {
+	return Token{Type, literal}
 }

@@ -1,27 +1,27 @@
 package woklang
 
 type WokBoolean struct {
-	value bool
-	dtype int
+	Value bool
+	DType int
 }
 
 func NewWokBoolean(value bool) *WokBoolean {
-	return &WokBoolean{value: value, dtype: WokTypeBoolean}
+	return &WokBoolean{Value: value, DType: WokTypeBoolean}
 }
 func (data *WokBoolean) ToString() string {
-	if data.value {
+	if data.Value {
 		return "true"
 	}
 	return "false"
 }
 
 func (data *WokBoolean) ToBoolean() bool {
-	return data.value
+	return data.Value
 }
 
 func (data *WokBoolean) ToInteger() int64 {
 	// TODO: confirm if its better to return error here instead of a value
-	if data.value {
+	if data.Value {
 		return 1
 	}
 	return 0
@@ -29,14 +29,14 @@ func (data *WokBoolean) ToInteger() int64 {
 
 func (data *WokBoolean) ToFloat() float64 {
 	// TODO: confirm if its better to return error here instead of a value
-	if data.value {
+	if data.Value {
 		return 1
 	}
 	return 0
 }
 
 func (data *WokBoolean) GetType() int {
-	return data.dtype
+	return data.DType
 }
 
 func (data *WokBoolean) GetTypeName() string {
@@ -44,9 +44,9 @@ func (data *WokBoolean) GetTypeName() string {
 }
 
 func (data *WokBoolean) GetValue() interface{} {
-	return data.value
+	return data.Value
 }
 
 func (data *WokBoolean) Equals(other WokData) bool {
-	return data.GetType() == other.GetType() && data.value == other.GetValue()
+	return data.GetType() == other.GetType() && data.Value == other.GetValue()
 }

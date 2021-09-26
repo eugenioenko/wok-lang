@@ -1,15 +1,14 @@
 package woklang
 
-type Function func(*Interpreter, []Expression) WokData
-
 type WokFunction struct {
-	function Function
-	name     string
-	dtype    int
+	name  string
+	args  []string
+	body  []Expression
+	DType int
 }
 
-func NewWokFunction(name string, function Function) *WokFunction {
-	return &WokFunction{dtype: WokTypeFunction, name: name, function: function}
+func NewWokFunction(name string, args []string, body []Expression) *WokFunction {
+	return &WokFunction{DType: WokTypeFunction, name: name, args: args, body: body}
 }
 
 func (data *WokFunction) ToString() string {
@@ -29,7 +28,7 @@ func (data *WokFunction) ToFloat() float64 {
 }
 
 func (data *WokFunction) GetType() int {
-	return data.dtype
+	return data.DType
 }
 
 func (data *WokFunction) GetTypeName() string {
@@ -37,7 +36,7 @@ func (data *WokFunction) GetTypeName() string {
 }
 
 func (data *WokFunction) GetValue() interface{} {
-	return data.function
+	return data.body
 }
 
 func (data *WokFunction) Equals(other WokData) bool {

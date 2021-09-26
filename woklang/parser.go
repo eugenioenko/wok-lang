@@ -28,7 +28,7 @@ func MakeParser() Parser {
 
 func (parser *Parser) Match(tokenTypes ...TokenType) bool {
 	for _, tokenType := range tokenTypes {
-		if parser.Peek().ttype == tokenType {
+		if parser.Peek().Type == tokenType {
 			parser.Advance()
 			return true
 		}
@@ -38,7 +38,7 @@ func (parser *Parser) Match(tokenTypes ...TokenType) bool {
 
 func (parser *Parser) Check(tokenTypes ...TokenType) bool {
 	for _, tokenType := range tokenTypes {
-		currentType := parser.Peek().ttype
+		currentType := parser.Peek().Type
 		if currentType == tokenType {
 			return true
 		}
@@ -70,7 +70,7 @@ func (parser *Parser) Peek() Token {
 }
 
 func (parser *Parser) Eof() bool {
-	return parser.Peek().ttype == TokenTypeEof ||
+	return parser.Peek().Type == TokenTypeEof ||
 		parser.current >= len(parser.tokens)
 }
 
@@ -104,7 +104,7 @@ func (parser *Parser) ListExpression() Expression {
 
 func (parser *Parser) AtomExpression() Expression {
 	atom := parser.Peek()
-	if atom.ttype != TokenTypeEof {
+	if atom.Type != TokenTypeEof {
 		parser.Advance()
 		return NewExpressionAtom(atom)
 	}

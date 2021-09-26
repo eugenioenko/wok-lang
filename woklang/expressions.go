@@ -10,7 +10,7 @@ type VisitorExpression interface {
 }
 
 type ExpressionList struct {
-	value []Expression
+	List []Expression
 }
 
 func NewExpressionList(value []Expression) *ExpressionList {
@@ -22,7 +22,7 @@ func (expr *ExpressionList) Accept(visitor VisitorExpression) WokData {
 }
 
 type ExpressionAtom struct {
-	value Token
+	Atom Token
 }
 
 func NewExpressionAtom(value Token) *ExpressionAtom {

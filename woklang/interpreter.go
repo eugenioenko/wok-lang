@@ -6,21 +6,20 @@ import (
 )
 
 type Interpreter struct {
-	root    *Scope
-	scope   *Scope
-	runtime *Scope
+	Root    *Scope
+	Scope   *Scope
+	Runtime *Scope
 }
 
 func MakeInterpreter() Interpreter {
 	interpreter := Interpreter{}
-	interpreter.runtime = &Scope{parent: nil, values: RuntimeScope}
-	interpreter.root = NewScope(nil)
-	interpreter.scope = NewScope(interpreter.root)
+	interpreter.Runtime = &Scope{parent: nil, values: RuntimeScope}
+	interpreter.Root = NewScope(nil)
+	interpreter.Scope = NewScope(interpreter.Root)
 	return interpreter
 }
 
-func (interpreter *Interpreter) Interpret(statements []Expression) WokData {
-	var result WokData = NewWokNull()
+func (interpreter *Interpreter) Interpret(statements []Expression) (result WokData) {
 	for _, statement := range statements {
 		result = interpreter.Evaluate(statement)
 	}
@@ -36,22 +35,54 @@ func (interpreter *Interpreter) Error(errorMessage string) {
 	os.Exit(1)
 }
 
+func (interpreter *Interpreter) FunctionCall(function *WokFunction, expressions []Expression) (result WokData) {
+	params := EvalParams(interpreter, expressions)
+	paramsMaxIndex := len(params) - 1
+	scope := interpreter.Scope
+	interpreter.Scope = NewScope(scope)
+	for index := 0; index < len(function.args); index++ {
+		if index <= paramsMaxIndex {
+			interpreter.Scope.Set(function.args[index], params[index])
+		} else {
+			interpreter.Scope.Set(function.args[index], NewWokNull())
+		}
+	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			ret := err.(*WokReturn)
+			if ret.From == function.name || ret.From == "" {
+				result = err.(*WokReturn).Value
+				interpreter.Scope = scope
+			} else {
+				panic(err)
+			}
+		}
+	}()
+	result = interpreter.Interpret(function.body)
+	interpreter.Scope = scope
+	return result
+}
+
 func (interpreter *Interpreter) VisitExpressionList(expr *ExpressionList) WokData {
-	if len(expr.value) == 0 {
+	if len(expr.List) == 0 {
 		return NewWokNull()
 	}
-	callee := interpreter.Evaluate(expr.value[0])
+	callee := interpreter.Evaluate(expr.List[0])
+	if callee.GetType() == WokTypeCallable {
+		function := callee.GetValue().(Callable)
+		return function(interpreter, expr.List[1:])
+	}
 	if callee.GetType() == WokTypeFunction {
-		function := callee.GetValue().(Function)
-		return function(interpreter, expr.value[1:])
+		return interpreter.FunctionCall(callee.(*WokFunction), expr.List[1:])
 	}
 	return NewWokNull()
 }
 
 func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokData {
-	literal := expr.value.literal
+	literal := expr.Atom.Literal
 
-	switch expr.value.ttype {
+	switch expr.Atom.Type {
 	case TokenTypeNull:
 		return NewWokNull()
 	case TokenTypeTrue:
@@ -67,14 +98,14 @@ func (interpreter *Interpreter) VisitExpressionAtom(expr *ExpressionAtom) WokDat
 	case TokenTypeBoolean:
 		return NewWokBoolean(NewWokString(literal).ToBoolean())
 	case TokenTypeIdentifier:
-		scopeValue, ok := interpreter.scope.Get(literal)
+		scopeValue, ok := interpreter.Scope.Get(literal)
 		if ok {
 			return scopeValue
 		}
 		interpreter.Error(fmt.Sprintf("Undefined '%s'", literal))
 		return NewWokNull()
 	case TokenTypeReserved:
-		runtimeValue, ok := interpreter.runtime.Get(literal)
+		runtimeValue, ok := interpreter.Runtime.Get(literal)
 		if ok {
 			return runtimeValue
 		}
