@@ -11,6 +11,10 @@ end up diverging from it
 
 > go build
 
+## Building web assembly binary
+
+> GOOS=js GOARCH=wasm go build cli/wasm/wok.go
+
 ## Running the project
 
 > wok exec [filename] will execute the script
