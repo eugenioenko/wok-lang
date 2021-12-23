@@ -28,9 +28,7 @@ end up diverging from it
 - Implemented tokenizer (scanner)
 - Implemented parser (s-expression parser)
 - Added rough runtime interpretation schema
-
-## To-dos
-
-- Function definition
-- Scope creation
-- tons of Predicates
+- Added conditional expressions
+- Added loop expressions
+- Added math expressions
+- Added func definition expression
