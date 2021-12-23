@@ -15,7 +15,7 @@ end up diverging from it
 
 ## Building web assembly binary
 
-> GOOS=js GOARCH=wasm go build cli/wasm/wok.go
+> GOOS=js GOARCH=wasm go build -o live/wok.wasm wasm/wok.go
 
 or using tinygo (currently not working)
 
@@ -29,7 +29,7 @@ or using tinygo (currently not working)
 
 ## Running playground locally
 
-Because WebAssembly.instantiateStreaming requires CORS, a local server is requiredcd
+Because WebAssembly.instantiateStreaming requires CORS, a local server is required
 
 > npm install http-server
 > cd live

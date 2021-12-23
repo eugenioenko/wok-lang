@@ -21,5 +21,8 @@ jobs:
     - name: Build
       run: go build ./wok.go
 
+    - name: Wasm
+      run: GOOS=js GOARCH=wasm go build -o live/wok.wasm wasm/wok.go
+
     - name: Test
       run: go test ./tests
