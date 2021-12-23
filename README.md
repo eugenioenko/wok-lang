@@ -7,7 +7,7 @@ interpretation of a functional programing language.
 WokLang as language is initially broadly inspired by Lisp but eventually will
 end up diverging from it
 
-### > [Try it out in webassembly playground!](https://eugenioenko.github.io/wok-lang/)
+### > [Try it out in webassembly playground!](https://eugenioenko.github.io/wok-lang/live)
 
 ## Building the project
 
