@@ -1,6 +1,6 @@
 package woklang
 
-func RuntimeDefun(interpreter *Interpreter, expressions []Expression) WokData {
+func RuntimeFunc(interpreter *Interpreter, expressions []Expression) WokData {
 	name := expressions[0].(*ExpressionAtom).Atom.Literal
 	args := make([]string, len(expressions[1].(*ExpressionList).List))
 	for index, token := range expressions[1].(*ExpressionList).List {

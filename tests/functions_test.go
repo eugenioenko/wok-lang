@@ -7,7 +7,7 @@ import (
 
 func TestDefineAFunction(t *testing.T) {
 	source := `
-		(defun function (a b c)
+		(func function (a b c)
 			(return c)
 		)
 		(debug function)
@@ -20,7 +20,7 @@ func TestDefineAFunction(t *testing.T) {
 
 func TestFunctionShouldReturnValue(t *testing.T) {
 	source := `
-		(defun function (a b c)
+		(func function (a b c)
 			(return c)
 		)
 		(debug (function 1 2 777))
@@ -33,7 +33,7 @@ func TestFunctionShouldReturnValue(t *testing.T) {
 
 func TestFunctionShouldNullUndefinedParams(t *testing.T) {
 	source := `
-		(defun function (a b c)
+		(func function (a b c)
 			(return c)
 		)
 		(debug (function 1 2))
@@ -46,8 +46,8 @@ func TestFunctionShouldNullUndefinedParams(t *testing.T) {
 
 func TestFunctionShouldReturnFromInner(t *testing.T) {
 	source := `
-		(defun function (a b c)
-			(defun inner (x y z)
+		(func function (a b c)
+			(func inner (x y z)
 				(return-from function 777)
 			)
 			(inner 1 2 3)
@@ -63,8 +63,8 @@ func TestFunctionShouldReturnFromInner(t *testing.T) {
 
 func TestFunctionShouldThrow(t *testing.T) {
 	source := `
-		(defun function (a b c)
-			(defun inner (x y z)
+		(func function (a b c)
+			(func inner (x y z)
 				(return-from function_does_not_exist 777)
 			)
 			(inner 1 2 3)

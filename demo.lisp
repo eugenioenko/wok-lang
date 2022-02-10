@@ -23,7 +23,7 @@
 )
 
 
-(defun function (alpha beta)
+(func function (alpha beta)
   (print alpha)
   (return-from "function" "the_return_value")
   (print beta)
@@ -33,7 +33,7 @@
 (print (function "first" "second"))
 
 
-(defun addition (a b)
+(func addition (a b)
   (return (+ a b))
 )
 
