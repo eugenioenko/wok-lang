@@ -18,14 +18,14 @@ var demo = `(print (+ 1 2 3))
 
 (:= index 0)
 (print index)
-(while (! (== index 10))
+(while (!= index 10)
   (print
     (:= index (+ index 1))
   )
 )
 
 
-(defun function (alpha beta)
+(func function (alpha beta)
   (print alpha)
   (return-from "function" "the_return_value")
   (print beta)
@@ -35,7 +35,7 @@ var demo = `(print (+ 1 2 3))
 (print (function "first" "second"))
 
 
-(defun addition (a b)
+(func addition (a b)
   (return (+ a b))
 )
 

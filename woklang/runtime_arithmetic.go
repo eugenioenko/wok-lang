@@ -7,14 +7,6 @@ func RuntimeAssignment(interpreter *Interpreter, expressions []Expression) WokDa
 	return value
 }
 
-func RuntimeEquality(interpreter *Interpreter, expressions []Expression) WokData {
-	params := EvalParams(interpreter, expressions)
-	result := Every(params, func(item WokData, index int) bool {
-		return item.GetType() == params[0].GetType() && item.GetValue() == params[0].GetValue()
-	})
-	return NewWokBoolean(result)
-}
-
 func RuntimeAddition(interpreter *Interpreter, expressions []Expression) WokData {
 	params := EvalParams(interpreter, expressions)
 	count := MathReduce(params, func(total int64, item WokData, index int) int64 {
