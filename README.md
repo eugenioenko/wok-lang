@@ -17,10 +17,6 @@ end up diverging from it
 
 > GOOS=js GOARCH=wasm go build -o live/wok.wasm wasm/wok.go
 
-or using tinygo (currently not working)
-
-> tinygo build -o ./live/wok.wasm -target wasm ./cli/wasm/wasm.go
-
 ## Running the project
 
 > wok exec [filename] will execute the script
